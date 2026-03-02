@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b0b766a60513348b0cd4fa62f4a1a1, type: 3}
+  m_Name: DefaultFirstPersonSettings
+  m_EditorClassIdentifier: VNTGExample::VNTG.Example.Settings
+  ControllerSensitivityScaleFactor: 2
+  Sensitivity: 0.1
+  YLookLimit: {x: -80, y: 80}
+  InvertLookY: 0
+  InvertLookX: 0
+  Speed: 7.5
+  BackwardSpeedMul: 0.5
+  StrafingSpeedMul: 1
+  GravityMul: 1
+  InputSmoothing: 15
+  AirControl: 0.2
+  TerminalVelocity: 50
+  EnableHeadMotion: 1
+  HeadBobAmount: 0.001
+  HeadBobFreqency: 1
+  HeadBobSmoothing: 10
