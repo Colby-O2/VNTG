@@ -102,7 +102,7 @@ Some projects where I've used older versions of these shaders:
 
 ## Credits
 
-Thanks to SmokeyTheKat for the tree model/textures and some utility functions.  
+Thanks to SmokeyTheKat for the icons, tree model/textures and some utility functions.  
 
 - [GitHub](https://github.com/SmokeyTheKat)  
 - [Itch](https://smoekythekittycat.itch.io/)
