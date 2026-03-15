@@ -8,7 +8,7 @@ Shader "Hidden/PSXMaster_URP"
     Properties
     {
         [Header(Resolution)]
-        _PixelResolution ("Internal Resolution", Float) = 256
+        _PixelResolution ("Pixelation Resolution", Vector) = (256, 256, 0, 0)
         
         [Header(Color and Dither)]
         _ColorPrecision ("Color Steps", Float) = 32
@@ -42,7 +42,7 @@ Shader "Hidden/PSXMaster_URP"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
-            float _PixelResolution;
+            float2 _PixelResolution;
             float _ColorPrecision;
             int _DitherPattern;
             int _DitherPixelPerfect;
@@ -249,8 +249,8 @@ Shader "Hidden/PSXMaster_URP"
             {
                 float2 uv = IN.texcoord;
                 
-                float2 screenPos = uv * _PixelResolution;
-                float2 downsampledUV = floor(screenPos) / _PixelResolution;
+                float2 pixel = floor(uv * _PixelResolution);
+                float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
 
                 float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, downsampledUV);
                 

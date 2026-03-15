@@ -34,7 +34,12 @@ namespace ColbyO.VNTG.PSX
 
         private void UpdateMaterialWithSettings(Material mat, PSXEffectSettings settings)
         {
-            mat.SetFloat("_PixelResolution", settings.PixelResolution.value);
+            mat.SetVector("_PixelResolution", 
+                new Vector2(
+                    Mathf.Max(1, settings.PixelResolution.value.x),
+                    Mathf.Max(1, settings.PixelResolution.value.y)
+                )
+            );
 
             mat.SetFloat("_ColorPrecision", settings.ColorPrecision.value);
 

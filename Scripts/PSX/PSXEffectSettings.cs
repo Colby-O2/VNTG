@@ -15,7 +15,7 @@ namespace ColbyO.VNTG.PSX
         public BoolParameter ShowInSceneView = new BoolParameter(false);
 
         [Header("Pixelation")]
-        public ClampedFloatParameter PixelResolution = new ClampedFloatParameter(256f, 1f, 4096);
+        public Vector2Parameter PixelResolution = new Vector2Parameter(new Vector2(256.0f, 256.0f));
         public ClampedFloatParameter ColorPrecision = new ClampedFloatParameter(32f, 0f, 256f);
 
         [Header("Dither")]
