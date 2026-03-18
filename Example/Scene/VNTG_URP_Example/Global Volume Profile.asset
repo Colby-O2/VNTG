@@ -190,7 +190,7 @@ MonoBehaviour:
     m_Value: 0
   PixelResolution:
     m_OverrideState: 1
-    m_Value: 256
+    m_Value: {x: 256, y: 144}
   ColorPrecision:
     m_OverrideState: 1
     m_Value: 16
