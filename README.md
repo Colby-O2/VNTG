@@ -111,4 +111,4 @@ Thanks to SmokeyTheKat for the icons, tree model/textures and some utility funct
 
 ## License
 
-VNTG Shader Pack is released under **CC0**. You may freely use, modify, and redistribute these shaders, including in commercial projects. While credit is not required, it’s greatly appreciated!
+VNTG Shader Pack is released under **The Unlicense**. You may freely use, modify, and redistribute these shaders, including in commercial projects. While credit is not required, it’s greatly appreciated!
