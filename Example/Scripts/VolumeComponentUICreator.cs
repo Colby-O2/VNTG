@@ -34,13 +34,21 @@ namespace ColbyO.VNTG.Example
 
         private VolumeComponent _settings;
 
-        private void Start()
+        private void OnEnable()
         {
             RefreshUI(_targetEffectName);
         }
 
+        private void OnDisable()
+        {
+            _settings = null;
+        }
+
         private void GenerateUI()
         {
+            _settings = GetSettings();
+            if (_settings == null) return;
+
             FieldInfo[] fields = _settings.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var field in fields)
@@ -56,6 +64,25 @@ namespace ColbyO.VNTG.Example
             }
         }
 
+        private VolumeComponent GetSettings()
+        {
+            Volume volume = FindFirstObjectByType<Volume>();
+            if (volume != null)
+            {
+                volume.profile = Instantiate(volume.profile);
+            }
+
+            if (volume == null || volume.profile == null) return null;
+
+            foreach (var component in volume.profile.components)
+            {
+                if (component.GetType().Name == _targetEffectName)
+                    return component;
+            }
+
+            return null;
+        }
+
         public void RefreshUI(string effectName)
         {
             foreach (Transform child in _container)
@@ -67,19 +94,7 @@ namespace ColbyO.VNTG.Example
 
             _title.text = (_targetEffectName == "CRTSettings") ? "CRT Post-Processing Settings" : "PSX Post-Processing Settings";
 
-            Volume volume = FindFirstObjectByType<Volume>();
-            if (volume != null && volume.profile != null)
-            {
-                foreach (VolumeComponent component in volume.profile.components)
-                {
-                    if (component.GetType().Name == _targetEffectName)
-                    {
-                        _settings = component;
-                        GenerateUI();
-                        break;
-                    }
-                }
-            }
+            GenerateUI();
         }
 
         private void CreateControl(FieldInfo field)
