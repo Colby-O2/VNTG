@@ -187,10 +187,10 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   PixelResolution:
     m_OverrideState: 1
-    m_Value: {x: 256, y: 144}
+    m_Value: {x: 256, y: 256}
   ColorPrecision:
     m_OverrideState: 1
     m_Value: 16

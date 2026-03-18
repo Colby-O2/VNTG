@@ -252,7 +252,7 @@ Shader "Hidden/PSXMaster_URP"
                 float2 pixel = floor(uv * _PixelResolution);
                 float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
 
-                float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, downsampledUV);
+                float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
                 
                 uint2 ditherCoord = (uint2)(uv * ((_DitherPixelPerfect == 1) ? _PixelResolution : _ScreenParams.xy / max(1.0, _DitherScale)));
                 float4x4 pattern = GetDitherPattern(_DitherPattern);
