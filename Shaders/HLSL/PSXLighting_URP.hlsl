@@ -7,7 +7,7 @@
 // https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl
 //-----------------------------------------------------------------------
 // Key Modifications:
-// - Integrated texel snapping logic (Adapted from truepak (GreatestBear), MIT License refer to 'SnapPositionToTexel' header)
+// - Integrated texel snapping logic (Adapted from GreatestBear)
 // - Added support for Unlit shaders
 // - Refactored MainLight to handle lighting calculations internally
 // - Implemented URP LIGHT_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering 
@@ -81,29 +81,7 @@
 #endif
 
 /** 
-    Code is adapted from truepak 
-
-    MIT License
-
-    Copyright (c) 2020 truepak
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+    Code is adapted from GreatestBear
 
     References:
         [1] https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574
@@ -144,29 +122,7 @@ void SnapPositionToTexel_float(
 }
 
 /** 
-    Code is adapted from truepak 
-
-    MIT License
-
-    Copyright (c) 2020 truepak
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+    Code is adapted from GreatestBear
 
     References:
         [1] https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574
