@@ -102,10 +102,12 @@ Some projects where I've used older versions of these shaders:
 
 ## Credits
 
-Thanks to SmokeyTheKat for the icons, tree model/textures and some utility functions.  
+**Collaborators**
+ - **SmokeyTheKat**: A huge thank you for providing the custom icons, tree models, tree textures, and essential utility functions. [GitHub](https://github.com/SmokeyTheKat) | [Itch](https://smoekythekittycat.itch.io/)
 
-- [GitHub](https://github.com/SmokeyTheKat)  
-- [Itch](https://smoekythekittycat.itch.io/)
+**Technical Credits**
+ - [**Codrin-Mihail**](https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl): Base lighting logic (Extensively overhauled. MIT License & changes documented in [PSXLighting_URP.hlsl](Shaders/HLSL/PSXLighting_URP.hlsl)).
+ - [**Turepak (Greatestbear)**](https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574): Per-texel snapping logic and math.
 
 ---
 
