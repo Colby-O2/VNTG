@@ -7,34 +7,63 @@
 // https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl
 //-----------------------------------------------------------------------
 // Key Modifications:
-// - Integrated texel snapping logic
+// - Integrated texel snapping logic (Adapted from turepak (greatestbear), MIT License refer to 'SnapPositionToTexel' header)
+// - Added support for Unlit shaders
 // - Refactored MainLight to handle lighting calculations internally
-// - Implemented URP LIGHT_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering
+// - Implemented URP LIGHT_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering 
+//   in addtion to Forward Rendering which was originally supported
 // - Fixed shadows for additional lights and added custom shadow tinting and distance cutoffs
 // - Added light cookie support
 // - Refactored overall code structure
-//-----------------------------------------------------------------------
-//MIT License
+//-------------------------------------------------------------------------
+// The below license applies to the original portions of the code by Codrin-Mihail.
+//-------------------------------------------------------------------------
+// MIT License
 
-//Copyright (c) 2020 Codrin-Mihail
+// Copyright (c) 2020 Codrin-Mihail
 
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files (the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions:
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//-------------------------------------------------------------------------
+// Modifications by Colby-O are released under The Unlicense
+//-------------------------------------------------------------------------
+// This is free and unencumbered software released into the public domain.
 
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
+// Anyone is free to copy, modify, publish, use, compile, sell, or
+// distribute this software, either in source code form or as a compiled
+// binary, for any purpose, commercial or non-commercial, and by any
+// means.
 
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
+// In jurisdictions that recognize copyright laws, the author or authors
+// of this software dedicate any and all copyright interest in the
+// software to the public domain. We make this dedication for the benefit
+// of the public at large and to the detriment of our heirs and
+// successors. We intend this dedication to be an overt act of
+// relinquishment in perpetuity of all present and future rights to this
+// software under copyright law.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
 //-------------------------------------------------------------------------
 
 #ifndef PSX_LIGHTING_INCLUDED
@@ -52,6 +81,30 @@
 #endif
 
 /** 
+    Code is adapted from truepak 
+
+    MIT License
+
+    Copyright (c) 2020 truepak
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
     References:
         [1] https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574
 */
@@ -91,6 +144,30 @@ void SnapPositionToTexel_float(
 }
 
 /** 
+    Code is adapted from truepak 
+
+    MIT License
+
+    Copyright (c) 2020 truepak
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
     References:
         [1] https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574
 */
@@ -159,7 +236,7 @@ void MainLight_float(
     half4 shadowCoord = TransformWorldToShadowCoord(WorldPosition);
 #endif
     
-    // TODO FIX: Shadows are kinda borken (with serve acene) due to the vertex jitter. 
+    // TODO FIX: Shadows are kinda borken (with severe acene) due to the vertex jitter. 
     // ShadowCorrd.z + ShadowOffset is a hack and casue peter paning artifacts.
     // For now set the offset to a small number and max out the shadow bias 
     // in the renderer asset for shadows.
@@ -266,7 +343,7 @@ void AdditionalLights_float(
     
     LIGHT_LOOP_BEGIN(pixelLightCount)
 
-    // TODO FIX: Shadows are kinda borken (with serve acene) due to the vertex jitter. 
+    // TODO FIX: Shadows are kinda borken (with severe acene) due to the vertex jitter. 
     // ShadowCoord seems to do nothing for additional lights so to fix you'll need to max out the depth
     // bias in your renderer asset for now.
     half4 shadowCoord = CalculateShadowMask(inputData);
