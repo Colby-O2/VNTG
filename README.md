@@ -107,7 +107,7 @@ Some projects where I've used older versions of these shaders:
 
 **Technical Credits**
  - [**Codrin-Mihail**](https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl): Base lighting logic (Extensively overhauled. MIT License & changes documented in [PSXLighting_URP.hlsl](Shaders/HLSL/PSXLighting_URP.hlsl)).
- - [**Turepak (Greatestbear)**](https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574): Per-texel snapping logic and math.
+ - [**Turepak (Greatestbear)**](https://discussions.unity.com/t/the-quest-for-efficient-per-texel-lighting/700574): Per-texel snapping logic and math. (MIT License in [PSXLighting_URP.hlsl](https://github.com/Colby-O2/VNTG/blob/master/Shaders/HLSL/PSXLighting_URP.hlsl#L86))
 
 ---
 
