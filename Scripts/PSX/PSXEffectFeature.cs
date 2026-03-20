@@ -43,14 +43,16 @@ namespace ColbyO.VNTG.PSX
 
             mat.SetFloat("_ColorPrecision", settings.ColorPrecision.value);
 
+            mat.SetInt("_EnableDither", (settings.EnableDither.value) ? 1 : 0);
+            mat.SetInt("_DitherMode", (int)settings.DitherMode.value);
             mat.SetInt("_DitherPattern", settings.DitherPattern.value);
             mat.SetInt("_DitherPixelPerfect", settings.DitherPixelPerfect.value ? 1 : 0);
             mat.SetFloat("_DitherScale", Mathf.Lerp(1f, 10f, settings.DitherScale.value));
-            mat.SetFloat("_DitherThreshold", Mathf.Lerp(0f, 20f, settings.DitherThreshold.value));
+            mat.SetFloat("_DitherThreshold", settings.DitherThreshold.value);
 
             mat.SetInt("_EnableFog", (settings.EnableFog.value) ? 1 : 0);
             mat.SetColor("_FogColor", settings.FogColor.value);
-            mat.SetFloat("_FogDensity", settings.FogDesnity.value);
+            mat.SetFloat("_FogDensity", settings.FogDensity.value);
             mat.SetFloat("_FogEdgeSmoothness", settings.FogEdgeSmoothness.value);
             mat.SetFloat("_FogNoiseStrength", settings.FogNoiseStrength.value);
             mat.SetFloat("_FogNoiseScale", Mathf.Lerp(1f, 10f, settings.FogNoiseScale.value));

@@ -25,9 +25,10 @@ namespace ColbyO.VNTG.CRT
             mat.SetFloat("_RefreshRate", settings.RefreshRate.value);
             mat.SetFloat("_DecayRate", settings.DecayRate.value);
             mat.SetVector("_ScreenResolution", settings.ScreenResolution.value);
-            mat.SetFloat("_ScreenBend", settings.ScreenBend.value);
             mat.SetInt("_EnableInterlacedRendering", settings.EnableInterlacedRendering.value ? 1 : 0);
 
+            mat.SetInt("_EnableScreenBend", settings.EnableScreenBend.value ? 1 : 0);
+            mat.SetFloat("_ScreenBend", settings.ScreenBend.value);
             mat.SetFloat("_ScreenRoundness", settings.ScreenRoundness.value);
             mat.SetFloat("_VignetteOpacity", settings.VignetteOpacity.value);
 

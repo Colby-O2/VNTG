@@ -43,7 +43,11 @@ Shader "Hidden/PSXMaster_URP"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             float2 _PixelResolution;
+
             float _ColorPrecision;
+
+            int _EnableDither;
+            int _DitherMode;
             int _DitherPattern;
             int _DitherPixelPerfect;
             float _DitherScale;
@@ -61,7 +65,7 @@ Shader "Hidden/PSXMaster_URP"
                 float4x4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                 float4x4(0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0),
                 float4x4(0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5) / 16.0,
-                float4x4(2.0, -2.0, -2.0,  2.0, -2.0,  4.0,  4.0, -2.0, -2.0,  4.0,  4.0, -2.0, 2.0, -2.0, -2.0,  2.0) / 4.0,
+                float4x4(2.0, 0.0, 0.0,  2.0, 0.0,  4.0,  4.0, 0.0, 0.0,  4.0,  4.0, 0.0, 2.0, 0.0, 0.0,  2.0) / 4.0,
                 float4x4(0, 2, 0, 2, 3, 1, 3, 1, 0, 2, 0, 2, 3, 1, 3, 1) / 4.0,
                 float4x4(0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12) / 16.0,
                 float4x4(0, 0, 0, 0, 8, 8, 8, 8, 15, 15, 15, 15, 8, 8, 8, 8) / 16.0,
@@ -167,18 +171,29 @@ Shader "Hidden/PSXMaster_URP"
             * Performs a binary dither check against a 4x4 matrix based on screen coordinates.
             * Compares the luminance of the scene color against a pattern threshold to decide visibility.
             *
-            * @param uv       The input coordinate.
-            * @param scene    The input RGB color.
-            * @param pattern  A 4x4 dither matrix.
+            * @param uv         The input coordinate.
+            * @param scene      The input RGB color.
+            * @param pattern    A 4x4 dither matrix.
             * @return         1.0 if the scaled luminance exceeds the threshold, otherwise 0.0.
             */
-            inline float GetDitherValue(uint2 uv, float3 scene, float4x4 pattern) 
+            inline float3 GetDitherValue(uint2 uv, float3 scene, float4x4 pattern) 
             {
                 uint x = uv.x % 4;
                 uint y = uv.y % 4;
-                
-                float threshold = pattern[x][y];
-                return (GetLuminance(scene) * _DitherThreshold > threshold) ? 1.0 : 0.0;
+                float threshold = pattern[y][x];
+                float ditherThreshold = _DitherThreshold * 20.0;
+
+                float lum = GetLuminance(scene);
+                float3 lumDither = step(threshold, lum * ditherThreshold);
+
+                return lumDither;
+            }
+
+            inline float GetDitherShift(uint2 uv, float4x4 pattern) 
+            {
+                uint x = uv.x % 4;
+                uint y = uv.y % 4;
+                return pattern[y][x] - 0.5;
             }
 
             /**
@@ -245,6 +260,33 @@ Shader "Hidden/PSXMaster_URP"
                 return fogColor;
             }
 
+            float3 ApplyDither(float2 uv, float3 scene) 
+            {
+                float3 finalCol = scene;
+
+                float2 ditherRes = lerp(_ScreenParams.xy / max(1.0, _DitherScale), _PixelResolution, _DitherPixelPerfect);
+                uint2 ditherCoord = (uint2)(uv * ditherRes);
+
+                float4x4 pattern = GetDitherPattern(_DitherPattern);
+
+                float ditherMult = GetDitherValue(ditherCoord, scene.rgb, pattern); 
+
+                float ditherShift = GetDitherShift(ditherCoord, pattern);
+                float additiveValue = ditherShift * (1.0 / _ColorPrecision) * (1.0 - _DitherThreshold);
+
+                float isMultiplicative = step(_DitherMode, 0.5);
+                float isAdditive = step(0.5, _DitherMode);
+
+                float3 multCol = finalCol * ditherMult;
+                float3 addCol = saturate(finalCol + additiveValue);
+
+                finalCol = lerp(addCol, multCol, isMultiplicative);
+
+                finalCol = lerp(scene, finalCol, _EnableDither);
+
+                return finalCol;
+            }
+
             float4 Frag(Varyings IN) : SV_Target
             {
                 float2 uv = IN.texcoord;
@@ -253,12 +295,9 @@ Shader "Hidden/PSXMaster_URP"
                 float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
 
                 float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
-                
-                uint2 ditherCoord = (uint2)(uv * ((_DitherPixelPerfect == 1) ? _PixelResolution : _ScreenParams.xy / max(1.0, _DitherScale)));
-                float4x4 pattern = GetDitherPattern(_DitherPattern);
-                float dither = GetDitherValue(ditherCoord, scene.rgb, pattern);
 
-                float3 finalCol = scene.rgb * dither;
+                float3 finalCol = ApplyDither(uv, scene.rgb);
+
                 finalCol = Quantize(finalCol, _ColorPrecision);
                 finalCol = CalculateFog(downsampledUV, finalCol);
 

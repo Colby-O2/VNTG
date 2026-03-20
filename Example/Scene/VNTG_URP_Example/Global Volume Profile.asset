@@ -31,6 +31,9 @@ MonoBehaviour:
   EnableInterlacedRendering:
     m_OverrideState: 1
     m_Value: 1
+  EnableScreenBend:
+    m_OverrideState: 1
+    m_Value: 1
   ScreenBend:
     m_OverrideState: 1
     m_Value: 3
@@ -193,7 +196,13 @@ MonoBehaviour:
     m_Value: {x: 256, y: 256}
   ColorPrecision:
     m_OverrideState: 1
-    m_Value: 16
+    m_Value: 32
+  EnableDither:
+    m_OverrideState: 1
+    m_Value: 1
+  DitherMode:
+    m_OverrideState: 1
+    m_Value: 1
   DitherPattern:
     m_OverrideState: 1
     m_Value: 1
@@ -202,19 +211,19 @@ MonoBehaviour:
     m_Value: 1
   DitherScale:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.356
   DitherThreshold:
     m_OverrideState: 1
-    m_Value: 0.145
+    m_Value: 0.103
   EnableFog:
     m_OverrideState: 1
     m_Value: 1
   FogColor:
     m_OverrideState: 1
     m_Value: {r: 0.1453809, g: 0.1981132, b: 0.124288, a: 1}
-  FogDesnity:
+  FogDensity:
     m_OverrideState: 1
-    m_Value: 0.047
+    m_Value: 0.09
   FogNoiseStrength:
     m_OverrideState: 1
     m_Value: 0.435

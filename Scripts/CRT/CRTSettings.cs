@@ -21,6 +21,7 @@ namespace ColbyO.VNTG.CRT
         public BoolParameter EnableInterlacedRendering = new BoolParameter(true);
 
         [Header("Screen Shape")]
+        public BoolParameter EnableScreenBend = new BoolParameter(true);
         public ClampedFloatParameter ScreenBend = new ClampedFloatParameter(4f, 0f, 100f);
         public ClampedFloatParameter ScreenRoundness = new ClampedFloatParameter(1f, 0f, 1f);
         public ClampedFloatParameter VignetteOpacity = new ClampedFloatParameter(1f, 0f, 1f);

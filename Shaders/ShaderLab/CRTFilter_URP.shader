@@ -41,6 +41,7 @@ Shader "Hidden/CRTFilter_URP"
             
             float _NoiseSpeed, _NoiseScale, _NoiseFade;
             float2 _NoiseRGBOffset;
+            int _EnableScreenBend;
             float _ScreenBend, _ScreenRoundness, _VignetteOpacity;
             float2 _ScreenResolution;
             float2 _ScanLineOpacity, _ScanLineSpeed;
@@ -641,7 +642,7 @@ Shader "Hidden/CRTFilter_URP"
                     return float4(GetLastFrameColor(IN.texcoord), 1.0);
                 }
 
-                float2 uv = CurveRemap(IN.texcoord);
+                float2 uv = (_EnableScreenBend == 1) ? CurveRemap(IN.texcoord) : IN.texcoord;
 
                 uv.x += CalculateInterference(uv);
                 uv.x += CalculateScanlineShift(uv);
