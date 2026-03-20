@@ -2,31 +2,31 @@ Only the listed files are included from the original projects; other files in th
 
 
 
-\## 1. PSXLighting\_URP.hlsl (Modified from CustomLighting.hlsl)
+## 1. PSXLighting\_URP.hlsl (Modified from CustomLighting.hlsl)
 
-\- Original Author: Codrin-Mihail
+- Original Author: Codrin-Mihail
 
-\- Original File: CustomLighting.hlsl
+- Original File: CustomLighting.hlsl
 
-\- Source: https://github.com/Kodrin/URP-PSX
+- Source: https://github.com/Kodrin/URP-PSX
 
-\- License: MIT
+- License: MIT
 
-\- Modifications by Colby O'Keefe:
+- Modifications by Colby O'Keefe:
 
-&#x09;- Integrated texel snapping logic	
-
-&#x09;- Added support for Unlit shaders
-
-&#x09;- Refactored MainLight to handle lighting calculations internally
-
-&#x09;- Implemented URP LIGHT\_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering in addition to Forward Rendering which was originally supported
-
-&#x09;- Fixed shadows for additional lights and added custom shadow tinting and distance cutoffs
-
-&#x09;- Added light cookie support
-
-&#x09;- Refactored overall code structure
+  - Integrated texel snapping logic	
+  
+  - Added support for Unlit shaders
+  
+  - Refactored MainLight to handle lighting calculations internally
+  
+  - Implemented URP LIGHT\_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering in addition to Forward Rendering which was originally supported
+  
+  - Fixed shadows for additional lights and added custom shadow tinting and distance cutoffs
+  
+  - Added light cookie support
+  
+  - Refactored overall code structure
 
 
 
