@@ -7,11 +7,11 @@
 // https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl
 //-----------------------------------------------------------------------
 // Key Modifications:
-// - Integrated texel snapping logic (Adapted from turepak (greatestbear), MIT License refer to 'SnapPositionToTexel' header)
+// - Integrated texel snapping logic (Adapted from truepak (GreatestBear), MIT License refer to 'SnapPositionToTexel' header)
 // - Added support for Unlit shaders
 // - Refactored MainLight to handle lighting calculations internally
 // - Implemented URP LIGHT_LOOP macros for additional lights, supporting Forward+ and Deferred Rendering 
-//   in addtion to Forward Rendering which was originally supported
+//   in addition to Forward Rendering which was originally supported
 // - Fixed shadows for additional lights and added custom shadow tinting and distance cutoffs
 // - Added light cookie support
 // - Refactored overall code structure
