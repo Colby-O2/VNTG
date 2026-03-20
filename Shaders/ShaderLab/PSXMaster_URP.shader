@@ -46,10 +46,10 @@ Shader "Hidden/PSXMaster_URP"
 
             float _ColorPrecision;
 
-            int _EnableDither;
-            int _DitherMode;
+            float _EnableDither;
+            float _DitherMode;
             int _DitherPattern;
-            int _DitherPixelPerfect;
+            float _DitherPixelPerfect;
             float _DitherScale;
             float _DitherThreshold;
             
@@ -174,9 +174,10 @@ Shader "Hidden/PSXMaster_URP"
             * @param uv         The input coordinate.
             * @param scene      The input RGB color.
             * @param pattern    A 4x4 dither matrix.
+            * @param perChannel If 1 uses per channel dithering else uses overall luminance.
             * @return         1.0 if the scaled luminance exceeds the threshold, otherwise 0.0.
             */
-            inline float3 GetDitherValue(uint2 uv, float3 scene, float4x4 pattern) 
+            inline float3 GetDitherValue(uint2 uv, float3 scene, float4x4 pattern, int perChannel) 
             {
                 uint x = uv.x % 4;
                 uint y = uv.y % 4;
@@ -185,10 +186,19 @@ Shader "Hidden/PSXMaster_URP"
 
                 float lum = GetLuminance(scene);
                 float3 lumDither = step(threshold, lum * ditherThreshold);
+                float3 perChannelDither = step(threshold, scene * ditherThreshold);
 
-                return lumDither;
+                return lerp(lumDither, perChannelDither, perChannel);
             }
 
+            /**
+             * Retrieves the dither offset from a 4x4 pattern for a given screen coordinate.
+             * This value is centered around 0 by subtracting 0.5, allowing additive dithering adjustments.
+             *
+             * @param uv       The input coordinate.
+             * @param pattern  A 4x4 dither matrix.
+             * @return         A float value in the range [-0.5, 0.5] representing the dither shift at the given coordinate.
+             */
             inline float GetDitherShift(uint2 uv, float4x4 pattern) 
             {
                 uint x = uv.x % 4;
@@ -260,7 +270,15 @@ Shader "Hidden/PSXMaster_URP"
                 return fogColor;
             }
 
-            float3 ApplyDither(float2 uv, float3 scene) 
+            /**
+             * Applies a dithering effect to a scene color at a given screen coordinate.
+             * Supports both luminance-based and per-channel dithering, as well as additive or multiplicative modes.
+             *
+             * @param uv     The input coordinate.
+             * @param scene  The input RGB color.
+             * @return       The dithered RGB color after applying the selected dither mode.
+             */
+            inline float3 ApplyDither(float2 uv, float3 scene) 
             {
                 float3 finalCol = scene;
 
@@ -269,13 +287,14 @@ Shader "Hidden/PSXMaster_URP"
 
                 float4x4 pattern = GetDitherPattern(_DitherPattern);
 
-                float ditherMult = GetDitherValue(ditherCoord, scene.rgb, pattern); 
+                float perChannelDither = step(0.5, _DitherMode);
+
+                float3 ditherMult = GetDitherValue(ditherCoord, scene.rgb, pattern, perChannelDither); 
 
                 float ditherShift = GetDitherShift(ditherCoord, pattern);
                 float additiveValue = ditherShift * (1.0 / _ColorPrecision) * (1.0 - _DitherThreshold);
 
-                float isMultiplicative = step(_DitherMode, 0.5);
-                float isAdditive = step(0.5, _DitherMode);
+                float isMultiplicative = step(_DitherMode, 1.5);
 
                 float3 multCol = finalCol * ditherMult;
                 float3 addCol = saturate(finalCol + additiveValue);
