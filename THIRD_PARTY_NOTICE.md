@@ -12,7 +12,7 @@ Only the listed files are included from the original projects; other files in th
 
 - License: MIT
 
-- Modifications by Colby O'Keefe:
+- Modifications by Colby-O:
 
   - Integrated texel snapping logic	
   
