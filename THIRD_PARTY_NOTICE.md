@@ -2,11 +2,11 @@ Only the listed files are included from the original projects; other files in th
 
 
 
-## 1. PSXLighting\_URP.hlsl (Modified from CustomLighting.hlsl)
+## 1. [PSXLighting_URP.hlsl](Shaders/HLSL/PSXLighting_URP.hlsl) (Modified from CustomLighting.hlsl)
 
 - Original Author: Codrin-Mihail
 
-- Original File: CustomLighting.hlsl
+- Original File: [CustomLighting.hlsl](https://github.com/Kodrin/URP-PSX/blob/master/URP-PSX/Assets/Shaders/HLSL/CustomLighting.hlsl)
 
 - Source: https://github.com/Kodrin/URP-PSX
 
