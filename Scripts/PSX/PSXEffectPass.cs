@@ -1,3 +1,4 @@
+using ColbyO.VNTG.CRT;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
@@ -14,17 +15,14 @@ namespace ColbyO.VNTG.PSX
         private const string _passName = "PSXEffectPass";
         private Material _material;
 
-        private PSXEffectSettings _settings;
-
         public PSXEffectPass(Material mat)
         {
             _material = mat;
             requiresIntermediateTexture = true;
         }
 
-        public void Setup(Material material, PSXEffectSettings settings)
+        public void Setup(Material material)
         {
-            _settings = settings;
             _material = material;
         }
 
@@ -57,13 +55,15 @@ namespace ColbyO.VNTG.PSX
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            if (_settings == null || !_settings.IsActive()) return;
+            VolumeStack stack = VolumeManager.instance.stack;
+            PSXEffectSettings settings = stack.GetComponent<PSXEffectSettings>();
+            if (settings == null || !settings.IsActive()) return;
 
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 
 
-            if ((!_settings.ShowInSceneView.value && cameraData.cameraType == CameraType.SceneView) || cameraData.cameraType == CameraType.Preview)
+            if ((!settings.ShowInSceneView.value && cameraData.cameraType == CameraType.SceneView) || cameraData.cameraType == CameraType.Preview)
             {
                 return;
             }
@@ -83,7 +83,7 @@ namespace ColbyO.VNTG.PSX
             {
                 passData.src = src;
                 passData.material = _material;
-                passData.settings = _settings;
+                passData.settings = settings;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);
                 builder.SetRenderAttachment(dst, 0, AccessFlags.Write);

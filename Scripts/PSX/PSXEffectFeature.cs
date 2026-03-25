@@ -40,12 +40,7 @@ namespace ColbyO.VNTG.PSX
                 return;
             }
 
-            VolumeStack stack = VolumeManager.instance.stack;
-            PSXEffectSettings settings = stack.GetComponent<PSXEffectSettings>();
-            if (settings == null || !settings.IsActive()) return;
-
-
-            _psxEffectPass.Setup(_material, settings);
+            _psxEffectPass.Setup(_material);
             renderer.EnqueuePass(_psxEffectPass);
         }
     }

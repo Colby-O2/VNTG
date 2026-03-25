@@ -23,7 +23,6 @@ namespace ColbyO.VNTG.CRT
 #endif
 
         private Material _material;
-        private CRTSettings _settings;
 
         public CRTRendererPass(Material material)
         {
@@ -31,9 +30,8 @@ namespace ColbyO.VNTG.CRT
             requiresIntermediateTexture = true;
         }
 
-        public void Setup(Material material, CRTSettings settings)
+        public void Setup(Material material)
         {
-            _settings = settings;
             _material = material;
         }
 
@@ -179,6 +177,15 @@ namespace ColbyO.VNTG.CRT
                 _historyBuffers[id] = historyRT;
             }
             return _historyBuffers[id];
+        }
+
+        public void Cleanup()
+        {
+            foreach (RTHandle rt in _historyBuffers.Values)
+            {
+                rt?.Release();
+            }
+            _historyBuffers.Clear();
         }
 
         private class PassData

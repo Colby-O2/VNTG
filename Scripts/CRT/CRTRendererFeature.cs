@@ -41,6 +41,7 @@ namespace ColbyO.VNTG.CRT
         protected override void Dispose(bool disposing)
         {
             if (_mat != null) CoreUtils.Destroy(_mat);
+            if (_rp != null) _rp.Cleanup();
             _mat = null;
             _rp = null;
         }
@@ -49,11 +50,7 @@ namespace ColbyO.VNTG.CRT
         {
             if (_mat == null || _rp == null) return;
 
-            VolumeStack stack = VolumeManager.instance.stack;
-            CRTSettings settings = stack.GetComponent<CRTSettings>();
-            if (settings == null || !settings.IsActive()) return;
-
-            _rp.Setup(_mat, settings);
+            _rp.Setup(_mat);
             _rp.ConfigureInput(ScriptableRenderPassInput.Color);
             renderer.EnqueuePass(_rp);
         }
