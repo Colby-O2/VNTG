@@ -16,7 +16,11 @@ namespace ColbyO.VNTG.CRT
     {
         private const string kPassName = "CRT Effect Pass";
 
+#if UNITY_6000_4_OR_NEWER
+        private Dictionary<EntityId, RTHandle> _historyBuffers = new();
+#else
         private Dictionary<int, RTHandle> _historyBuffers = new();
+#endif
 
         private Material _material;
         private CRTSettings _settings;
@@ -112,7 +116,12 @@ namespace ColbyO.VNTG.CRT
 
             TextureHandle src = resourceData.activeColorTexture;
 
+#if UNITY_6000_4_OR_NEWER
+            int camID = cameraData.camera.GetEntityId();
+#else
             int camID = cameraData.camera.GetInstanceID();
+#endif
+
             RTHandle historyRT = GetHistoryBuffer(camID, cameraData, cameraData.cameraTargetDescriptor);
             TextureHandle historyHandle = renderGraph.ImportTexture(historyRT);
 

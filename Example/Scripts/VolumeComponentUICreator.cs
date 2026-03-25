@@ -66,7 +66,12 @@ namespace ColbyO.VNTG.Example
 
         private VolumeComponent GetSettings()
         {
+#if UNITY_6000_4_OR_NEWER
+            Volume volume = FindAnyObjectByType<Volume>();
+#else
             Volume volume = FindFirstObjectByType<Volume>();
+#endif
+
             if (volume != null)
             {
                 volume.profile = Instantiate(volume.profile);
