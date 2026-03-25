@@ -55,7 +55,8 @@ Email: cokeefe919@gmail.com
 ![Full Screen Pixelation](https://github.com/Colby-O2/VNTG/blob/master/Videos/Pixelation.gif)
 
 **Dithering with 9 preset patterns**  
-with options for pixel perfect dither or a custom scale  
+with Additive and Multiplicative dither modes. (only multiplicative is shown below)<br>
+Options for pixel perfect dither or a custom scale
 ![Dithering Example](https://github.com/Colby-O2/VNTG/blob/master/Videos/Dither.gif)
 
 **Customizable Stylized Fog**  
