@@ -190,7 +190,7 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   PixelResolution:
     m_OverrideState: 1
     m_Value: {x: 320, y: 256}
