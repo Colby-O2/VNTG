@@ -190,13 +190,13 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   PixelResolution:
     m_OverrideState: 1
     m_Value: {x: 320, y: 256}
   ColorPrecision:
     m_OverrideState: 1
-    m_Value: 32
+    m_Value: 24
   EnableDither:
     m_OverrideState: 1
     m_Value: 1
@@ -211,13 +211,13 @@ MonoBehaviour:
     m_Value: 1
   DitherScale:
     m_OverrideState: 1
-    m_Value: 0.533
+    m_Value: 0.179
   DitherThreshold:
     m_OverrideState: 1
     m_Value: 0
   EnableFog:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   FogColor:
     m_OverrideState: 1
     m_Value: {r: 0.1453809, g: 0.1981132, b: 0.124288, a: 1}

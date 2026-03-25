@@ -92,7 +92,7 @@ namespace ColbyO.VNTG.Example
         public void TogglePSXEffect()
         {
             if (_psx) _psx.Enabled.value = !_psx.Enabled.value;
-            //TogglePSXMaterials();
+            TogglePSXMaterials();
         }
 
         public void ToggleFogEffect()
