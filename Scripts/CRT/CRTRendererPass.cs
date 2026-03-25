@@ -115,7 +115,7 @@ namespace ColbyO.VNTG.CRT
             TextureHandle src = resourceData.activeColorTexture;
 
 #if UNITY_6000_4_OR_NEWER
-            int camID = cameraData.camera.GetEntityId();
+            EntityId camID = cameraData.camera.GetEntityId();
 #else
             int camID = cameraData.camera.GetInstanceID();
 #endif
