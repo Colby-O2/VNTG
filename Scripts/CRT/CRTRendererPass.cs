@@ -17,7 +17,6 @@ namespace ColbyO.VNTG.CRT
         private const string kPassName = "CRT Effect Pass";
         private readonly Material _material;
         private Dictionary<int, RTHandle> _historyBuffers = new();
-        private Dictionary<int, int> _lastInteralceOffset = new();
 
         public CRTRendererPass(Material material)
         {
@@ -59,15 +58,9 @@ namespace ColbyO.VNTG.CRT
 
             using (IRasterRenderGraphBuilder builder = renderGraph.AddRasterRenderPass(kPassName, out PassData passData))
             {
-                if (!_lastInteralceOffset.ContainsKey(camID)) _lastInteralceOffset[camID] = 0;
                 passData.src = src;
                 passData.history = historyHandle;
                 passData.material = _material;
-                passData.interlaceOffset = ((int)(Time.time * (float)settings.RefreshRate.value)) % 2;
-                passData.refresh = (_lastInteralceOffset[camID] != passData.interlaceOffset) ? 1 : 0;
-                passData.deltaTime = Time.deltaTime;
-                passData.iTime = Time.time;
-                _lastInteralceOffset[camID] = passData.interlaceOffset;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);
                 builder.UseTexture(passData.history, AccessFlags.Read);
@@ -77,10 +70,6 @@ namespace ColbyO.VNTG.CRT
                 {
 
                     data.material.SetTexture("_PrevFrameTex", data.history);
-                    data.material.SetInt("_Refresh", data.refresh);
-                    data.material.SetInt("_InterlaceOffset", data.interlaceOffset);
-                    data.material.SetFloat("_DeltaTime", data.deltaTime);
-                    data.material.SetFloat("_iTime", data.iTime);
 
                     Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
                 });
@@ -121,10 +110,6 @@ namespace ColbyO.VNTG.CRT
             public TextureHandle src;
             public TextureHandle history;
             public Material material;
-            public int interlaceOffset;
-            public int refresh;
-            public float iTime;
-            public float deltaTime;
         }
     }
 }

@@ -29,11 +29,9 @@ Shader "Hidden/CRTFilter_URP"
 
             TEXTURE2D(_PrevFrameTex);
 
-            int _InterlaceOffset;
-            float _DeltaTime;
-            float _iTime;
+            //int _InterlaceOffset;
 
-            int _Refresh;
+            //int _Refresh;
             float _RefreshRate;
             float _DecayRate;
             int _EnableInterlacedRendering;
@@ -132,7 +130,7 @@ Shader "Hidden/CRTFilter_URP"
             float ValueNoise(float2 uv) 
             {
                 // Generate noise map seed based on _NoiseSpeed and _RefreshRate
-                float seed = fmod(floor(_iTime * _NoiseSpeed * _RefreshRate) / _RefreshRate, 100.0);
+                float seed = fmod(floor(_Time.y * _NoiseSpeed * _RefreshRate) / _RefreshRate, 100.0);
 
                 // Fetch current grid cell.
                 float2 ip = floor(uv);
@@ -184,8 +182,8 @@ Shader "Hidden/CRTFilter_URP"
             {
                 // Calculates a value from a 2D sin wave between [-1, 1]. 
                 float2 intensity = float2(
-                    sin(uv.x * _ScreenResolution.x + _iTime * _ScanLineSpeed.x * 100.0), 
-                    cos(uv.y * _ScreenResolution.y + _iTime * _ScanLineSpeed.y * 100.0)
+                    sin(uv.x * _ScreenResolution.x + _Time.y * _ScanLineSpeed.x * 100.0), 
+                    cos(uv.y * _ScreenResolution.y + _Time.y * _ScanLineSpeed.y * 100.0)
                 ) * _ScanLineStrength;
 
                 // Remaps value from [-1, 1] -> [0, 1]
@@ -200,6 +198,11 @@ Shader "Hidden/CRTFilter_URP"
                 return (weight > 0.0) ? scanVal / weight : 1.0;
             }
 
+            inline int Refresh(float time) 
+            {
+                return (int)((time * _RefreshRate) % 2.0);
+            }
+
             /**
              * Determines whether the current pixel should be updated.
              *
@@ -208,14 +211,19 @@ Shader "Hidden/CRTFilter_URP"
              */
             inline bool ShouldRefresh(float2 uv) 
             {
+               int lastInterlaceOffset = Refresh(_Time.y - unity_DeltaTime.x);
+               int  interlaceOffset = Refresh(_Time.y);
+
                 // Identify if the current row is even or odd, adjusted by a frame-toggled offset
                 float lin = floor(uv.y * _ScreenResolution.y);
-                bool isInteralcedRow = ((int(lin) + _InterlaceOffset) & 1) == 0;
+                bool isInteralcedRow = ((int(lin) + interlaceOffset) & 1) == 0;
 
                 // Refresh if: 
                 // 1. Interlacing is OFF and it is the active row
                 // 2. CRT is in a refresh frame (_Refresh = 1)
-                return !((isInteralcedRow && _EnableInterlacedRendering) || _Refresh == 0);
+                bool shouldRefresh = interlaceOffset != lastInterlaceOffset;
+
+                return !(isInteralcedRow && _EnableInterlacedRendering) || shouldRefresh;
             }
 
             /**
@@ -247,7 +255,7 @@ Shader "Hidden/CRTFilter_URP"
                 float offsetNoiseModifier = WhiteNoise(float2(phaseNumber + 1, phaseNumber), 0.0, 10.0);
                 
                 // Calculate the offset.
-                float offsetUV = sin((uv.y + frac(_iTime * 0.05)) * 6.28318 * _InterferenceFrequency) * (0.002 * offsetNoiseModifier);
+                float offsetUV = sin((uv.y + frac(_Time.y * 0.05)) * 6.28318 * _InterferenceFrequency) * (0.002 * offsetNoiseModifier);
                 
                 // Scales the offset. 
                 return offsetUV * _InterferenceAmplitude * _EnableSignalInterference;
@@ -273,13 +281,13 @@ Shader "Hidden/CRTFilter_URP"
             inline float CalculateScanlineShift(float2 uv)
             {
                 // Create a normalized time factor (0 to 1)
-                float t = 1.0 - fmod(_iTime, _TrackingSpeed) / _TrackingSpeed;
+                float t = 1.0 - fmod(_Time.y, _TrackingSpeed) / _TrackingSpeed;
                 
                 // Map the time factor to a specific vertical pixel position on the screen
                 float trackingStart = fmod(t * _ScreenResolution.y, _ScreenResolution.y);
                 
                 // Add high-frequency randomness to the bar's position
-                float trackingJitter = WhiteNoise(float2(5000.0, 5000.0), 0.0, frac(_iTime)) * _TrackingJitter;
+                float trackingJitter = WhiteNoise(float2(5000.0, 5000.0), 0.0, frac(_Time.y)) * _TrackingJitter;
                 trackingStart += trackingJitter;
 
                 // Determine if the current pixel's vertical position is below the tracking line
@@ -301,10 +309,10 @@ Shader "Hidden/CRTFilter_URP"
                 float3 scene = originalSceneColor;
 
                 // Determine if a glitch line should trigger for this frame
-                if(WhiteNoise(float2(600.0, 500.0), 0.0, frac(_iTime * 20.0)) > 1.0 - _GlitchChance)
+                if(WhiteNoise(float2(600.0, 500.0), 0.0, frac(_Time.y * 20.0)) > 1.0 - _GlitchChance)
                 {
                     // Pick a random y coordinate for the line to appear
-                    float randomY = WhiteNoise(float2(800.0, 50.0), 0.0, frac(_iTime));
+                    float randomY = WhiteNoise(float2(800.0, 50.0), 0.0, frac(_Time.y));
                     float lineStart = floor(randomY * _ScreenResolution.y);
         
                     float thickness = 2.0; 
@@ -314,18 +322,18 @@ Shader "Hidden/CRTFilter_URP"
                     if(currentPixelY >= lineStart && currentPixelY < lineStart + thickness)
                     {
                         // Calculate randomized horizontal block scaling
-                        float lengthVar = WhiteNoise(float2(lineStart, 123.45), 0.0, frac(_iTime * 2.0));
+                        float lengthVar = WhiteNoise(float2(lineStart, 123.45), 0.0, frac(_Time.y * 2.0));
                         float horizontalScale = _GlitchLength * lerp(0.5, 1.0, lengthVar);
                         float xBlock = floor(uv.x * horizontalScale);
             
                         // Create blocky noise patterns along the horizontal line
-                        float blockNoise = WhiteNoise(float2(xBlock, lineStart), 0.0, frac(_iTime * 5.0));
+                        float blockNoise = WhiteNoise(float2(xBlock, lineStart), 0.0, frac(_Time.y * 5.0));
             
                         if(blockNoise > 0.8) 
                         {
                             // Apply high frequency grit to the block
                             float xSeed = floor(uv.x * _ScreenResolution.x);
-                            float grit = WhiteNoise(float2(xSeed, lineStart), 0.0, frac(_iTime * 15.0));
+                            float grit = WhiteNoise(float2(xSeed, lineStart), 0.0, frac(_Time.y * 15.0));
 
                             // Applies the artifact
                             scene.rgb += max(0.8 - grit, 0.0) * 2.0; 
@@ -537,7 +545,7 @@ Shader "Hidden/CRTFilter_URP"
              */
             inline float3 CalculateVHSDamage(float3 scene, float2 uv)
             {
-                float chromOffset = _ChromaticOffset * cos(_iTime * _ChromaticSpeed) / 10.0;
+                float chromOffset = _ChromaticOffset * cos(_Time.y * _ChromaticSpeed) / 10.0;
 
                 float colVHSR = GetVHSColor(uv, _VHSSmear, -chromOffset).r;
                 float colVHSG = GetVHSColor(uv, _VHSSmear,  chromOffset).g;
