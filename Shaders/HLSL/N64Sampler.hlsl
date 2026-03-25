@@ -38,8 +38,6 @@ void N64Sampler_half(UnityTexture2D Texture, UnitySamplerState Sampler, half4 Te
 {
     half2 texels = UV * TexelSize.zw;
     
-    half mip = 0.0;
-    
     half scale = pow(2.0, floor(mip));
     TexelSize.xy * -scale;
     TexelSize.zw /= scale;
@@ -55,9 +53,9 @@ void N64Sampler_half(UnityTexture2D Texture, UnitySamplerState Sampler, half4 Te
     half2 uvB = (floor(texels) + half2(1.5, 0.5)) * TexelSize.xy;
     half2 uvC = (floor(texels) + half2(0.5, 1.5)) * TexelSize.xy;
     
-    half4 A = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvA, mip);
-    half4 B = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvB, mip);
-    half4 C = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvC, mip);
+    half4 A = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvA, 0.0);
+    half4 B = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvB, 0.0);
+    half4 C = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvC, 0.0);
     
     Out = A * blend.x + B * blend.y + C * blend.z;
 }
