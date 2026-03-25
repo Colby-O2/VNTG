@@ -154,7 +154,11 @@ namespace ColbyO.VNTG.CRT
             resourceData.cameraColor = dst;
         }
 
+#if UNITY_6000_4_OR_NEWER
+        private RTHandle GetHistoryBuffer(EntityId id, UniversalCameraData cameraData, RenderTextureDescriptor desc)
+#else
         private RTHandle GetHistoryBuffer(int id, UniversalCameraData cameraData, RenderTextureDescriptor desc)
+#endif
         {
             if (!_historyBuffers.TryGetValue(id, out RTHandle historyRT) ||
                 historyRT == null ||
