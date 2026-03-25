@@ -136,7 +136,7 @@ namespace ColbyO.VNTG.CRT
                 {
 
                     data.material.SetTexture("_PrevFrameTex", data.history);
-                    UpdateMaterialWithSettings(_material, settings);
+                    UpdateMaterialWithSettings(data.material, data.settings);
 
                     Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
                 });

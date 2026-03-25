@@ -90,7 +90,7 @@ namespace ColbyO.VNTG.PSX
 
                 builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
                 {
-                    UpdateMaterialWithSettings(passData.material, passData.settings);
+                    UpdateMaterialWithSettings(data.material, data.settings);
                    Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
                 });
             }
