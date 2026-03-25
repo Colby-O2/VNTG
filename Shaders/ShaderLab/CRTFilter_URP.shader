@@ -236,7 +236,7 @@ Shader "Hidden/CRTFilter_URP"
             inline float3 GetLastFrameColor(float2 uv) 
             {
                 float3 prevFrame = SAMPLE_TEXTURE2D(_PrevFrameTex, sampler_LinearClamp, uv).rgb;
-                float decay = pow(abs(_DecayRate), _DeltaTime);
+                float decay = pow(abs(_DecayRate), unity_DeltaTime.x);
                 return prevFrame * decay;
             }
             
@@ -691,6 +691,7 @@ Shader "Hidden/CRTFilter_URP"
                 col *= GetVignetteMask(uv);
 
                 return float4(col, 1.0);
+
             }
             ENDHLSL
         }
