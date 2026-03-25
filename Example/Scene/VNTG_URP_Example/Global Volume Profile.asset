@@ -190,10 +190,10 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   PixelResolution:
     m_OverrideState: 1
-    m_Value: {x: 256, y: 256}
+    m_Value: {x: 320, y: 256}
   ColorPrecision:
     m_OverrideState: 1
     m_Value: 32
@@ -211,7 +211,7 @@ MonoBehaviour:
     m_Value: 1
   DitherScale:
     m_OverrideState: 1
-    m_Value: 0.356
+    m_Value: 0.533
   DitherThreshold:
     m_OverrideState: 1
     m_Value: 0

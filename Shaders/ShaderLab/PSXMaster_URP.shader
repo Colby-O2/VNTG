@@ -61,20 +61,6 @@ Shader "Hidden/PSXMaster_URP"
             float _FogNoiseScale;
             float _FogNoiseStart;
 
-            static const float4x4 DITHER_PATTERNS[11] = {\
-                float4x4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                float4x4(0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0),
-                float4x4(0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5) / 16.0,
-                float4x4(2.0, 0.0, 0.0,  2.0, 0.0,  4.0,  4.0, 0.0, 0.0,  4.0,  4.0, 0.0, 2.0, 0.0, 0.0,  2.0) / 4.0,
-                float4x4(0, 2, 0, 2, 3, 1, 3, 1, 0, 2, 0, 2, 3, 1, 3, 1) / 4.0,
-                float4x4(0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12) / 16.0,
-                float4x4(0, 0, 0, 0, 8, 8, 8, 8, 15, 15, 15, 15, 8, 8, 8, 8) / 16.0,
-                float4x4(3, 6, 9, 12, 6, 9, 12, 3, 9, 12, 3, 6, 12, 3, 6, 9) / 16.0,
-                float4x4(13, 10, 11, 14, 6, 1, 2, 7, 5, 0, 3, 8, 12, 9, 4, 15) / 16.0,
-                float4x4(0.1, 0.7, 0.3, 0.9, 0.5, 0.2, 0.8, 0.4, 0.9, 0.3, 0.7, 0.1, 0.4, 0.8, 0.2, 0.5),
-                float4x4(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-            };
-
             /**
             * Generates a random value from a 3D vector.
             *
@@ -158,13 +144,58 @@ Shader "Hidden/PSXMaster_URP"
             }
 
             /**
-            * Retrieves a predefined 4x4 dither matrix from a constant array.
+            * Retrieves a predefined 4x4 dither matrix.
             *
-            * @param index  The index of the desired pattern in DITHER_PATTERNS.
+            * @param index  The index of the desired pattern.
             * @return       A 4x4 matrix containing the dither pattern.
             */
             inline float4x4 GetDitherPattern(int index) {
-                return DITHER_PATTERNS[index];
+                if (index == 0) 
+                {
+                    return float4x4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                }
+                else if (index == 1)
+                {
+                    return float4x4(0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0);
+                }
+                else if (index == 2)
+                {
+                    return float4x4(0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5) / 16.0;
+                }
+                else if (index == 3)
+                {
+                    return float4x4(2.0, 0.0, 0.0,  2.0, 0.0,  4.0,  4.0, 0.0, 0.0,  4.0,  4.0, 0.0, 2.0, 0.0, 0.0,  2.0) / 4.0;
+                }
+                else if (index == 4)
+                {
+                    return float4x4(0, 2, 0, 2, 3, 1, 3, 1, 0, 2, 0, 2, 3, 1, 3, 1) / 4.0;
+                }
+                else if (index == 5)
+                {
+                    return float4x4(0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12, 0, 4, 8, 12) / 16.0;
+                }
+                else if (index == 6)
+                {
+                    return float4x4(0, 0, 0, 0, 8, 8, 8, 8, 15, 15, 15, 15, 8, 8, 8, 8) / 16.0;
+                }
+                else if (index == 7)
+                {
+                    return float4x4(3, 6, 9, 12, 6, 9, 12, 3, 9, 12, 3, 6, 12, 3, 6, 9) / 16.0;
+                }
+                else if (index == 8)
+                {
+                    return float4x4(13, 10, 11, 14, 6, 1, 2, 7, 5, 0, 3, 8, 12, 9, 4, 15) / 16.0;
+                }
+                else if (index == 9)
+                {
+                    return float4x4(0.1, 0.7, 0.3, 0.9, 0.5, 0.2, 0.8, 0.4, 0.9, 0.3, 0.7, 0.1, 0.4, 0.8, 0.2, 0.5);
+                }
+                else if (index == 10)
+                {
+                    return float4x4(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+                }
+                
+                 return float4x4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             }
 
             /**
@@ -313,7 +344,7 @@ Shader "Hidden/PSXMaster_URP"
                 float2 pixel = floor(uv * _PixelResolution);
                 float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
 
-                float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
+                float4 scene = SAMPLE_TEXTURE2D(_BlitTexture, sampler_PointClamp, downsampledUV);
 
                 float3 finalCol = ApplyDither(uv, scene.rgb);
 
