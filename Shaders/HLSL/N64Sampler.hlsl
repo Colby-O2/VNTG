@@ -10,12 +10,7 @@ void N64Sampler_float(UnityTexture2D Texture, UnitySamplerState Sampler, float4 
 {
     float2 texels = UV * TexelSize.zw;
     
-    float mip = 0.0;
-    
-    float scale = pow(2.0, floor(mip));
-    TexelSize.xy * -scale;
-    TexelSize.zw /= scale;
-    texels = texels / scale - 0.5;
+    texels = texels - 0.5;
     
     float2 fracTexel = frac(texels);
     float3 blend = float3(
@@ -27,9 +22,9 @@ void N64Sampler_float(UnityTexture2D Texture, UnitySamplerState Sampler, float4 
     float2 uvB = (floor(texels) + float2(1.5, 0.5)) * TexelSize.xy;
     float2 uvC = (floor(texels) + float2(0.5, 1.5)) * TexelSize.xy;
     
-    float4 A = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvA, mip);
-    float4 B = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvB, mip);
-    float4 C = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvC, mip);
+    float4 A = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvA, 0.0);
+    float4 B = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvB, 0.0);
+    float4 C = SAMPLE_TEXTURE2D_LOD(Texture, Sampler, uvC, 0.0);
     
     Out = A * blend.x + B * blend.y + C * blend.z;
 }
@@ -38,10 +33,8 @@ void N64Sampler_half(UnityTexture2D Texture, UnitySamplerState Sampler, half4 Te
 {
     half2 texels = UV * TexelSize.zw;
     
-    half scale = pow(2.0, floor(mip));
-    TexelSize.xy * -scale;
-    TexelSize.zw /= scale;
-    texels = texels / scale - 0.5;
+    TexelSize.xy *= -1.0;
+    texels = texels - 0.5;
     
     half2 fracTexel = frac(texels);
     half3 blend = half3(
