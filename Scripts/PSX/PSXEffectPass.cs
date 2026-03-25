@@ -79,13 +79,6 @@ namespace ColbyO.VNTG.PSX
             dstDesc.name = _passName;
             TextureHandle dst = renderGraph.CreateTexture(dstDesc);
 
-            //TextureDesc dstDesc = renderGraph.GetTextureDesc(src);
-            //dstDesc.name = _passName;
-            //dstDesc.width = (int)_settings.PixelResolution.value.x;
-            //dstDesc.height = (int)_settings.PixelResolution.value.y;
-            //dstDesc.filterMode = FilterMode.Point;
-            //TextureHandle dst = renderGraph.CreateTexture(dstDesc);
-
             using (IRasterRenderGraphBuilder builder = renderGraph.AddRasterRenderPass(_passName, out PassData passData))
             {
                 passData.src = src;

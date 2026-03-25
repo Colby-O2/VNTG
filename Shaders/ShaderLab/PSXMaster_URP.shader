@@ -344,7 +344,7 @@ Shader "Hidden/PSXMaster_URP"
                 float2 pixel = floor(uv * _PixelResolution);
                 float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
 
-                float4 scene = SAMPLE_TEXTURE2D(_BlitTexture, sampler_PointClamp, downsampledUV);
+                float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
 
                 float3 finalCol = ApplyDither(uv, scene.rgb);
 
