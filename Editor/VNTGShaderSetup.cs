@@ -2,6 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+//-----------------------------------------------------------------------
+// Author:  Colby-O
+// File:    VNTGShaderSetup.cs
+//-----------------------------------------------------------------------
 namespace ColbyO.VNTG.Editor
 {
     public static class VNTGShaderSetup
