@@ -1,4 +1,3 @@
-using ColbyO.VNTG.CRT;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
@@ -15,49 +14,50 @@ namespace ColbyO.VNTG.PSX
         private const string _passName = "PSXEffectPass";
         private Material _material;
 
+        private PSXEffectSettings _settings;
+
         public PSXEffectPass(Material mat)
         {
             _material = mat;
             requiresIntermediateTexture = true;
         }
 
-        public void Setup(Material material)
+        public void Setup(Material material, PSXEffectSettings settings)
         {
             _material = material;
+            _settings = settings;
         }
 
-        private void UpdateMaterialWithSettings(Material mat, PSXEffectSettings settings)
+        private void UpdateMaterialWithSettings(Material material, PSXEffectSettings settings)
         {
-            mat.SetVector("_PixelResolution",
+            material.SetVector("_PixelResolution",
                 new Vector2(
                     Mathf.Max(1, settings.PixelResolution.value.x),
                     Mathf.Max(1, settings.PixelResolution.value.y)
                 )
             );
 
-            mat.SetFloat("_ColorPrecision", settings.ColorPrecision.value);
+            material.SetFloat("_ColorPrecision", settings.ColorPrecision.value);
 
-            mat.SetFloat("_EnableDither", (settings.EnableDither.value) ? 1 : 0);
-            mat.SetFloat("_DitherMode", (int)settings.DitherMode.value);
-            mat.SetInt("_DitherPattern", settings.DitherPattern.value);
-            mat.SetFloat("_DitherPixelPerfect", settings.DitherPixelPerfect.value ? 1 : 0);
-            mat.SetFloat("_DitherScale", Mathf.Lerp(1f, 10f, settings.DitherScale.value));
-            mat.SetFloat("_DitherThreshold", settings.DitherThreshold.value);
+            material.SetFloat("_EnableDither", (settings.EnableDither.value) ? 1 : 0);
+            material.SetFloat("_DitherMode", (int)settings.DitherMode.value);
+            material.SetInt("_DitherPattern", settings.DitherPattern.value);
+            material.SetFloat("_DitherPixelPerfect", settings.DitherPixelPerfect.value ? 1 : 0);
+            material.SetFloat("_DitherScale", Mathf.Lerp(1f, 10f, settings.DitherScale.value));
+            material.SetFloat("_DitherThreshold", settings.DitherThreshold.value);
 
-            mat.SetInt("_EnableFog", (settings.EnableFog.value) ? 1 : 0);
-            mat.SetColor("_FogColor", settings.FogColor.value);
-            mat.SetFloat("_FogDensity", settings.FogDensity.value);
-            mat.SetFloat("_FogEdgeSmoothness", settings.FogEdgeSmoothness.value);
-            mat.SetFloat("_FogNoiseStrength", settings.FogNoiseStrength.value);
-            mat.SetFloat("_FogNoiseScale", Mathf.Lerp(1f, 10f, settings.FogNoiseScale.value));
-            mat.SetFloat("_FogNoiseStart", Mathf.Lerp(0f, 100f, settings.FogNoiseStart.value));
+            material.SetInt("_EnableFog", (settings.EnableFog.value) ? 1 : 0);
+            material.SetColor("_FogColor", settings.FogColor.value);
+            material.SetFloat("_FogDensity", settings.FogDensity.value);
+            material.SetFloat("_FogEdgeSmoothness", settings.FogEdgeSmoothness.value);
+            material.SetFloat("_FogNoiseStrength", settings.FogNoiseStrength.value);
+            material.SetFloat("_FogNoiseScale", Mathf.Lerp(1f, 10f, settings.FogNoiseScale.value));
+            material.SetFloat("_FogNoiseStart", Mathf.Lerp(0f, 100f, settings.FogNoiseStart.value));
         }
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            VolumeStack stack = VolumeManager.instance.stack;
-            PSXEffectSettings settings = stack.GetComponent<PSXEffectSettings>();
-            if (settings == null || !settings.IsActive()) return;
+            if (_settings == null || !_settings.IsActive()) return;
 
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
@@ -77,14 +77,14 @@ namespace ColbyO.VNTG.PSX
             {
                 passData.src = src;
                 passData.material = _material;
-                passData.settings = settings;
+                passData.settings = _settings;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);
                 builder.SetRenderAttachment(dst, 0, AccessFlags.Write);
 
                 builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
                 {
-                    UpdateMaterialWithSettings(data.material, data.settings);
+                   UpdateMaterialWithSettings(data.material, data.settings);
                    Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
                 });
             }

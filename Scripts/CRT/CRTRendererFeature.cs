@@ -16,8 +16,8 @@ namespace ColbyO.VNTG.CRT
         [Header("Options")]
         [SerializeField] private RenderPassEvent _injectionPoint = RenderPassEvent.BeforeRenderingPostProcessing;
 
-        private Material _mat;
-        private CRTRendererPass _rp;
+        private Material _material;
+        private CRTRendererPass _crtPass;
 
         public override void Create()
         {
@@ -26,29 +26,29 @@ namespace ColbyO.VNTG.CRT
                 _shader = Shader.Find("Hidden/CRTFilter_URP");
             }
 
-            if (_mat == null && _shader != null)
+            if (_material == null && _shader != null)
             {
-                _mat = CoreUtils.CreateEngineMaterial(_shader);
+                _material = CoreUtils.CreateEngineMaterial(_shader);
             }
 
-            if (_rp == null)
+            if (_crtPass == null)
             {
-                _rp = new CRTRendererPass(_mat);
-                _rp.renderPassEvent = _injectionPoint;
+                _crtPass = new CRTRendererPass(_material);
+                _crtPass.renderPassEvent = _injectionPoint;
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (_mat != null) CoreUtils.Destroy(_mat);
-            _rp?.Cleanup();
-            _mat = null;
-            _rp = null;
+            if (_material != null) CoreUtils.Destroy(_material);
+            _crtPass?.Cleanup();
+            _material = null;
+            _crtPass = null;
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            if (_mat == null || _rp == null) return;
+            if (_material == null || _crtPass == null) return;
 
             VolumeStack stack = VolumeManager.instance.stack;
             CRTSettings settings = stack.GetComponent<CRTSettings>();
@@ -62,9 +62,17 @@ namespace ColbyO.VNTG.CRT
                 (isGameCamera || isSceneView)
             )
             {
-                _rp.Setup(_mat);
-                _rp.ConfigureInput(ScriptableRenderPassInput.Color);
-                renderer.EnqueuePass(_rp);
+                _crtPass.Setup(_material, settings);
+                _crtPass.ConfigureInput(ScriptableRenderPassInput.Color);
+                renderer.EnqueuePass(_crtPass);
+            }
+            else
+            {
+#if UNITY_6000_4_OR_NEWER
+                _crtPass.Cleanup(renderingData.cameraData.camera.GetEntityId());
+#else
+                _crtPass.Cleanup(renderingData.cameraData.camera.GetInstanceID());
+#endif
             }
         }
     }

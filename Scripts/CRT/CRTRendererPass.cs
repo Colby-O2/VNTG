@@ -23,6 +23,7 @@ namespace ColbyO.VNTG.CRT
 #endif
 
         private Material _material;
+        private CRTSettings _settings;
 
         public CRTRendererPass(Material material)
         {
@@ -30,9 +31,10 @@ namespace ColbyO.VNTG.CRT
             requiresIntermediateTexture = true;
         }
 
-        public void Setup(Material material)
+        public void Setup(Material material, CRTSettings settings)
         {
             _material = material;
+            _settings = settings;
         }
 
         private void UpdateMaterialWithSettings(Material mat, CRTSettings settings)
@@ -93,9 +95,7 @@ namespace ColbyO.VNTG.CRT
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            VolumeStack stack = VolumeManager.instance.stack;
-            CRTSettings settings = stack.GetComponent<CRTSettings>();
-            if (settings == null || !settings.IsActive()) return;
+            if (_settings == null || !_settings.IsActive()) return;
 
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
@@ -113,7 +113,7 @@ namespace ColbyO.VNTG.CRT
 #else
             int camID = cameraData.camera.GetInstanceID();
 #endif
-
+            float forceRefresh = _historyBuffers.ContainsKey(camID) ? 0.0f : 1.0f;
             RTHandle historyRT = GetHistoryBuffer(camID, cameraData, cameraData.cameraTargetDescriptor);
             TextureHandle historyHandle = renderGraph.ImportTexture(historyRT);
 
@@ -127,7 +127,8 @@ namespace ColbyO.VNTG.CRT
                 passData.src = src;
                 passData.history = historyHandle;
                 passData.material = _material;
-                passData.settings = settings;
+                passData.settings = _settings;
+                passData.forceRefresh = forceRefresh;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);
                 builder.UseTexture(passData.history, AccessFlags.Read);
@@ -137,6 +138,7 @@ namespace ColbyO.VNTG.CRT
                 {
 
                     data.material.SetTexture("_PrevFrameTex", data.history);
+                    data.material.SetFloat("_ForceRefresh", data.forceRefresh);
                     UpdateMaterialWithSettings(data.material, data.settings);
 
                     Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
@@ -177,6 +179,19 @@ namespace ColbyO.VNTG.CRT
             return _historyBuffers[id];
         }
 
+#if UNITY_6000_4_OR_NEWER
+        public void Cleanup(EntityId camID)
+#else
+        public void Cleanup(int camID)
+#endif
+        {
+            if (_historyBuffers.ContainsKey(camID))
+            {
+                _historyBuffers[camID]?.Release();
+                _historyBuffers.Remove(camID);
+            }
+        }
+
         public void Cleanup()
         {
             foreach (RTHandle rt in _historyBuffers.Values)
@@ -192,6 +207,7 @@ namespace ColbyO.VNTG.CRT
             public TextureHandle history;
             public Material material;
             public CRTSettings settings;
+            public float forceRefresh;
         }
     }
 }

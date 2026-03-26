@@ -29,9 +29,7 @@ Shader "Hidden/CRTFilter_URP"
 
             TEXTURE2D(_PrevFrameTex);
 
-            //int _InterlaceOffset;
-
-            //int _Refresh;
+            float _ForceRefresh;
             float _RefreshRate;
             float _DecayRate;
             int _EnableInterlacedRendering;
@@ -223,7 +221,7 @@ Shader "Hidden/CRTFilter_URP"
                 // 2. CRT is in a refresh frame (_Refresh = 1)
                 bool shouldRefresh = interlaceOffset != lastInterlaceOffset;
 
-                return !(isInteralcedRow && _EnableInterlacedRendering) || shouldRefresh;
+                return !(isInteralcedRow && _EnableInterlacedRendering) && shouldRefresh;
             }
 
             /**
@@ -645,7 +643,7 @@ Shader "Hidden/CRTFilter_URP"
 
             float4 frag(Varyings IN) : SV_Target
             {
-                if (!ShouldRefresh(IN.texcoord)) 
+                if (!ShouldRefresh(IN.texcoord) && _ForceRefresh < 0.50) 
                 {
                     return float4(GetLastFrameColor(IN.texcoord), 1.0);
                 }
