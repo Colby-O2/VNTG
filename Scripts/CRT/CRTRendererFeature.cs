@@ -62,7 +62,7 @@ namespace ColbyO.VNTG.CRT
                 (isGameCamera || isSceneView)
             )
             {
-                _crtPass.Setup(_material, settings);
+                _crtPass.Setup(_material);
                 _crtPass.ConfigureInput(ScriptableRenderPassInput.Color);
                 renderer.EnqueuePass(_crtPass);
             }

@@ -22,7 +22,6 @@ namespace ColbyO.VNTG.CRT
 #endif
 
         private Material _material;
-        private CRTSettings _settings;
 
         public CRTRendererPass(Material material)
         {
@@ -30,10 +29,9 @@ namespace ColbyO.VNTG.CRT
             requiresIntermediateTexture = true;
         }
 
-        public void Setup(Material material, CRTSettings settings)
+        public void Setup(Material material)
         {
             _material = material;
-            _settings = settings;
         }
 
         private void UpdateMaterialWithSettings(Material mat, CRTSettings settings)
@@ -94,7 +92,9 @@ namespace ColbyO.VNTG.CRT
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            if (_settings == null || !_settings.IsActive()) return;
+            VolumeStack stack = VolumeManager.instance.stack;
+            CRTSettings settings = stack.GetComponent<CRTSettings>();
+            if (settings == null || !settings.IsActive()) return;
 
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
@@ -126,7 +126,7 @@ namespace ColbyO.VNTG.CRT
                 passData.src = src;
                 passData.history = historyHandle;
                 passData.material = _material;
-                passData.settings = _settings;
+                passData.settings = settings;
                 passData.forceRefresh = forceRefresh;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);

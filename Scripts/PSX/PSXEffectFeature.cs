@@ -52,7 +52,7 @@ namespace ColbyO.VNTG.PSX
                 (isGameCamera || isSceneView)
             )
             {
-                _psxEffectPass.Setup(_material, settings);
+                _psxEffectPass.Setup(_material);
                 renderer.EnqueuePass(_psxEffectPass);
             }
         }
