@@ -62,12 +62,6 @@ namespace ColbyO.VNTG.PSX
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 
-
-            if ((!settings.ShowInSceneView.value && cameraData.cameraType == CameraType.SceneView) || cameraData.cameraType == CameraType.Preview)
-            {
-                return;
-            }
-
             if (resourceData.isActiveTargetBackBuffer)
             {
                 Debug.LogError("Skipping render pass. PSX Effect render requries an intermediate ColorTexture.");

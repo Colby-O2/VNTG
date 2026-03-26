@@ -100,12 +100,6 @@ namespace ColbyO.VNTG.CRT
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
             UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
 
-
-            if ((!settings.ShowInSceneView.value && cameraData.cameraType == CameraType.SceneView) || cameraData.cameraType == CameraType.Preview)
-            {
-                return;
-            }
-
             if (resourceData.isActiveTargetBackBuffer)
             {
                 Debug.LogError("Skipping render pass. CRT render requries an intermediate ColorTexture.");

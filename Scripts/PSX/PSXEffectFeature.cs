@@ -40,8 +40,21 @@ namespace ColbyO.VNTG.PSX
                 return;
             }
 
-            _psxEffectPass.Setup(_material);
-            renderer.EnqueuePass(_psxEffectPass);
+            VolumeStack stack = VolumeManager.instance.stack;
+            PSXEffectSettings settings = stack.GetComponent<PSXEffectSettings>();
+
+            bool isGameCamera = renderingData.cameraData.cameraType == CameraType.Game;
+            bool isSceneView = renderingData.cameraData.cameraType == CameraType.SceneView && settings.ShowInSceneView.value;
+
+            if (
+                settings != null &&
+                settings.IsActive() &&
+                (isGameCamera || isSceneView)
+            )
+            {
+                _psxEffectPass.Setup(_material);
+                renderer.EnqueuePass(_psxEffectPass);
+            }
         }
     }
 }

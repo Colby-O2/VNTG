@@ -41,7 +41,7 @@ namespace ColbyO.VNTG.CRT
         protected override void Dispose(bool disposing)
         {
             if (_mat != null) CoreUtils.Destroy(_mat);
-            if (_rp != null) _rp.Cleanup();
+            _rp?.Cleanup();
             _mat = null;
             _rp = null;
         }
@@ -50,9 +50,22 @@ namespace ColbyO.VNTG.CRT
         {
             if (_mat == null || _rp == null) return;
 
-            _rp.Setup(_mat);
-            _rp.ConfigureInput(ScriptableRenderPassInput.Color);
-            renderer.EnqueuePass(_rp);
+            VolumeStack stack = VolumeManager.instance.stack;
+            CRTSettings settings = stack.GetComponent<CRTSettings>();
+
+            bool isGameCamera = renderingData.cameraData.cameraType == CameraType.Game;
+            bool isSceneView = renderingData.cameraData.cameraType == CameraType.SceneView && settings.ShowInSceneView.value;
+
+            if (
+                settings != null &&
+                settings.IsActive() &&
+                (isGameCamera || isSceneView)
+            )
+            {
+                _rp.Setup(_mat);
+                _rp.ConfigureInput(ScriptableRenderPassInput.Color);
+                renderer.EnqueuePass(_rp);
+            }
         }
     }
 }
