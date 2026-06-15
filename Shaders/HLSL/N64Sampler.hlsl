@@ -3,8 +3,8 @@
 // File:    N64Sampler.hlsl
 //-----------------------------------------------------------------------
 
-#ifndef N64_Sampler_INCLUDED
-#define N64_Sampler_INCLUDED
+#ifndef N64_SAMPLER_INCLUDED
+#define N64_SAMPLER_INCLUDED
 
 void N64Sampler_float(UnityTexture2D Texture, UnitySamplerState Sampler, float4 TexelSize, float2 UV, out float4 Out)
 {
