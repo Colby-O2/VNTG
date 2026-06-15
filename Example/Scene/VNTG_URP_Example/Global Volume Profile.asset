@@ -18,10 +18,13 @@ MonoBehaviour:
     m_Value: 0
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   ScreenResolution:
     m_OverrideState: 1
     m_Value: {x: 640, y: 480}
+  UseMaxFPS:
+    m_OverrideState: 1
+    m_Value: 0
   RefreshRate:
     m_OverrideState: 1
     m_Value: 50
@@ -190,10 +193,19 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
+  AmbientColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
+  EnablePixelation:
+    m_OverrideState: 1
+    m_Value: 1
   PixelResolution:
     m_OverrideState: 1
     m_Value: {x: 320, y: 256}
+  EnableColorPrecision:
+    m_OverrideState: 1
+    m_Value: 1
   ColorPrecision:
     m_OverrideState: 1
     m_Value: 24
@@ -215,7 +227,32 @@ MonoBehaviour:
   DitherThreshold:
     m_OverrideState: 1
     m_Value: 0
+  EnableColorPalette:
+    m_OverrideState: 1
+    m_Value: 0
+  PaletteInputMode:
+    m_OverrideState: 1
+    m_Value: 2
+  PaletteTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: bce6e94b717a52d4f8a3b7d110f9c8ca, type: 3}
+    dimension: 1
+  PaletteColorList:
+    m_OverrideState: 1
+    m_Value:
+    - {r: 1, g: 1, b: 1, a: 0}
+    - {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - {r: 0.254717, g: 0.24630652, b: 0.24630652, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+    - {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
+    - {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
+  HexFileAsset:
+    m_OverrideState: 1
+    m_Value: {fileID: 1042094116111776886, guid: eeef6400e3d6dc54bb88c6de5bd8406c, type: 3}
   EnableFog:
+    m_OverrideState: 1
+    m_Value: 1
+  IgnoreSkybox:
     m_OverrideState: 1
     m_Value: 1
   FogColor:

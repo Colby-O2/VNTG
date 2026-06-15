@@ -8,17 +8,24 @@ Shader "Hidden/PSXMaster_URP"
     Properties
     {
         [Header(Resolution)]
+        _EnablePixelation("Enable Pixelation", Float) = 1
         _PixelResolution ("Pixelation Resolution", Vector) = (256, 256, 0, 0)
         
         [Header(Color and Dither)]
+        _EnableColorPrecision("Enable Color Precision", Float) = 1
         _ColorPrecision ("Color Steps", Float) = 32
         _DitherPattern ("Dither Pattern", Float) = 1.0
         _DitherPixelPerfect ("Use Pixel Perfect Dither", Float) = 1.0
         _DitherScale ("Dither Pattern Scale", Float) = 1.0
         _DitherThreshold ("Dither Sensitivity", Float) = 1.0
         
+        [Header(Palette)]
+        _EnablePalette ("Enable Color Palette", Float) = 0
+        _PaletteLUT ("3D Color Palette Map", 3D) = "white" {}
+
         [Header(Fog)]
         _EnableFog ("Enable Fog", Float) = 0
+        _IgnoreSkybox ("Ignore Skybox", Float) = 0
         _FogDensity ("Fog Density", Float) = 1.0
         _FogColor ("Fog Color", Color) = (0, 0, 0, 1)
         _FogNoiseStrength ("Fog Noise Strength", Float) = 0.1
@@ -42,8 +49,10 @@ Shader "Hidden/PSXMaster_URP"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
+            float _EnablePixelation;
             float2 _PixelResolution;
 
+            float _EnableColorPrecision;
             float _ColorPrecision;
 
             float _EnableDither;
@@ -53,7 +62,12 @@ Shader "Hidden/PSXMaster_URP"
             float _DitherScale;
             float _DitherThreshold;
             
+            float _EnablePalette;
+            TEXTURE3D(_PaletteLUT);
+            SAMPLER(sampler_PaletteLUT);
+
             int _EnableFog;
+            float _IgnoreSkybox;
             float4 _FogColor;
             float _FogDensity;
             float _FogEdgeSmoothness;
@@ -246,7 +260,7 @@ Shader "Hidden/PSXMaster_URP"
             */
             inline float3 Quantize(float3 color, float steps)
             {
-                return floor(color * steps) / steps;
+                return (_EnableColorPrecision > 0.5) ? floor(color * steps) / steps : color;
             }
 
             /**
@@ -296,6 +310,12 @@ Shader "Hidden/PSXMaster_URP"
                     float dynamicFog = fogFactor + ((noise - 0.5) * _FogNoiseStrength * speckledMask * noiseMask);
 
                     fogColor = lerp(scene, _FogColor.rgb, saturate(dynamicFog));
+
+                    #if UNITY_REVERSED_Z
+                        if (_IgnoreSkybox < 0.5 && rawDepth < 0.00001) return lerp(scene, fogColor, pow(_FogDensity, 0.1));
+                    #else
+                        if (_IgnoreSkybox < 0.5 && rawDepth > 0.99999) return lerp(scene, fogColor, pow(_FogDensity, 0.1));
+                    #endif
                 }
 
                 return fogColor;
@@ -337,18 +357,36 @@ Shader "Hidden/PSXMaster_URP"
                 return finalCol;
             }
 
+             /**
+             * Applies a color palette lookup using a 3D LUT.
+             *
+             * @param  The input RGB color. 
+             * @return Remapped RGB color from the palette LUT      
+             */
+            inline float3 ApplyPaletteLookup(float3 color)
+            {
+                float3 uvw = color * (31.0 / 32.0) + (0.5 / 32.0);
+                return SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
+            }
+
             float4 Frag(Varyings IN) : SV_Target
             {
                 float2 uv = IN.texcoord;
                 
                 float2 pixel = floor(uv * _PixelResolution);
-                float2 downsampledUV = (pixel + 0.5) / _PixelResolution;
+                float2 downsampledUV = (_EnablePixelation > 0.5) ? (pixel + 0.5) / _PixelResolution : uv;
 
                 float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
 
                 float3 finalCol = ApplyDither(uv, scene.rgb);
 
                 finalCol = Quantize(finalCol, _ColorPrecision);
+
+                if (_EnablePalette > 0.5)
+                {
+                    finalCol = ApplyPaletteLookup(finalCol);
+                }
+
                 finalCol = CalculateFog(downsampledUV, finalCol);
 
                 return float4(finalCol, scene.a);

@@ -80,6 +80,8 @@
 
 #endif
 
+float4 _VNTGAmbientColor;
+
 /** 
     Code is adapted from GreatestBear
 
@@ -204,7 +206,7 @@ void MainLight_float(
     float shadowAtten = (EnableShadows && distToCamera < ShadowDistCutoff) ? mainLight.shadowAttenuation : 1.0;
     float3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * shadowAtten) + ShadowTint * (1.0 - shadowAtten);
 
-    diffuseColor = LightingLambert(attenuatedLightColor, mainLight.direction, WorldNormal);
+    diffuseColor = saturate(LightingLambert(attenuatedLightColor, mainLight.direction, WorldNormal) + _VNTGAmbientColor);
     specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, WorldNormal, WorldView, float4(SpecColor, 0), Smoothness);
     
 #endif
@@ -255,7 +257,7 @@ void MainLight_half(
     half shadowAtten = (EnableShadows && distToCamera < ShadowDistCutoff) ? mainLight.shadowAttenuation : 1.0;
     half3 attenuatedLightColor = mainLight.color * (mainLight.distanceAttenuation * shadowAtten) + ShadowTint * (1.0 - shadowAtten);
 
-    diffuseColor = LightingLambert(attenuatedLightColor, mainLight.direction, WorldNormal);
+    diffuseColor = saturate(LightingLambert(attenuatedLightColor, mainLight.direction, WorldNormal) + _VNTGAmbientColor);
     specularColor = LightingSpecular(attenuatedLightColor, mainLight.direction, WorldNormal, WorldView, half4(SpecColor, 0), Smoothness);
     
 #endif

@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4736016311668185363
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbed17f5f145d64589ad7ae3c637fc3, type: 3}
+  m_Name: PSXEffectSettings
+  m_EditorClassIdentifier: ColbyO.VNTG::ColbyO.VNTG.PSX.PSXEffectSettings
+  active: 1
+  Enabled:
+    m_OverrideState: 1
+    m_Value: 1
+  ShowInSceneView:
+    m_OverrideState: 1
+    m_Value: 0
+  AmbientColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 0, a: 1}
+  EnablePixelation:
+    m_OverrideState: 1
+    m_Value: 1
+  PixelResolution:
+    m_OverrideState: 1
+    m_Value: {x: 256, y: 256}
+  EnableColorPrecision:
+    m_OverrideState: 1
+    m_Value: 1
+  ColorPrecision:
+    m_OverrideState: 1
+    m_Value: 32
+  EnableDither:
+    m_OverrideState: 1
+    m_Value: 1
+  DitherMode:
+    m_OverrideState: 1
+    m_Value: 2
+  DitherPattern:
+    m_OverrideState: 1
+    m_Value: 1
+  DitherPixelPerfect:
+    m_OverrideState: 1
+    m_Value: 0
+  DitherScale:
+    m_OverrideState: 1
+    m_Value: 0.5
+  DitherThreshold:
+    m_OverrideState: 1
+    m_Value: 0.1
+  EnableColorPalette:
+    m_OverrideState: 1
+    m_Value: 0
+  PaletteInputMode:
+    m_OverrideState: 1
+    m_Value: 1
+  PaletteTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  PaletteColorList:
+    m_OverrideState: 1
+    m_Value:
+    - {r: 1, g: 1, b: 1, a: 0}
+    - {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0}
+    - {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 0}
+    - {r: 0, g: 0, b: 0, a: 0}
+  HexFileAsset:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  EnableFog:
+    m_OverrideState: 1
+    m_Value: 0
+  IgnoreSkybox:
+    m_OverrideState: 0
+    m_Value: 0
+  FogColor:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  FogDensity:
+    m_OverrideState: 0
+    m_Value: 1
+  FogNoiseStrength:
+    m_OverrideState: 0
+    m_Value: 0.1
+  FogEdgeSmoothness:
+    m_OverrideState: 0
+    m_Value: 0.5
+  FogNoiseScale:
+    m_OverrideState: 0
+    m_Value: 0.5
+  FogNoiseStart:
+    m_OverrideState: 0
+    m_Value: 0.7
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Global Volume (1) Profile
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
+  components:
+  - {fileID: -4736016311668185363}
+  - {fileID: 1212131194509346550}
+--- !u!114 &1212131194509346550
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24a169137338a2f47986f6bc8e00dfe8, type: 3}
+  m_Name: CRTSettings
+  m_EditorClassIdentifier: ColbyO.VNTG::ColbyO.VNTG.CRT.CRTSettings
+  active: 1
+  Enabled:
+    m_OverrideState: 1
+    m_Value: 0
+  ShowInSceneView:
+    m_OverrideState: 1
+    m_Value: 0
+  ScreenResolution:
+    m_OverrideState: 0
+    m_Value: {x: 640, y: 480}
+  UseMaxFPS:
+    m_OverrideState: 0
+    m_Value: 0
+  RefreshRate:
+    m_OverrideState: 0
+    m_Value: 50
+  DecayRate:
+    m_OverrideState: 0
+    m_Value: 0.9
+  EnableInterlacedRendering:
+    m_OverrideState: 0
+    m_Value: 1
+  EnableScreenBend:
+    m_OverrideState: 0
+    m_Value: 1
+  ScreenBend:
+    m_OverrideState: 0
+    m_Value: 4
+  ScreenRoundness:
+    m_OverrideState: 0
+    m_Value: 1
+  VignetteOpacity:
+    m_OverrideState: 0
+    m_Value: 1
+  ScanLineVerticalOpacity:
+    m_OverrideState: 0
+    m_Value: 0
+  ScanLineHorizontalOpacity:
+    m_OverrideState: 0
+    m_Value: 1
+  ScanLineVerticalSpeed:
+    m_OverrideState: 0
+    m_Value: 0.1
+  ScanLineHorizontalSpeed:
+    m_OverrideState: 0
+    m_Value: -0.2
+  ScanLineStrength:
+    m_OverrideState: 0
+    m_Value: 0.2
+  NoiseScale:
+    m_OverrideState: 0
+    m_Value: 0.9
+  NoiseRBGOffsetX:
+    m_OverrideState: 0
+    m_Value: 0.4
+  NoiseRBGOffsetY:
+    m_OverrideState: 0
+    m_Value: 0.7
+  NoiseSpeed:
+    m_OverrideState: 0
+    m_Value: 0.1
+  NoiseFade:
+    m_OverrideState: 0
+    m_Value: 0.55
+  VhsSmear:
+    m_OverrideState: 0
+    m_Value: 0.95
+  EnableTrackerLine:
+    m_OverrideState: 0
+    m_Value: 1
+  TrackingSpeed:
+    m_OverrideState: 0
+    m_Value: 4
+  TrackingJitter:
+    m_OverrideState: 0
+    m_Value: 4
+  GlitchChance:
+    m_OverrideState: 0
+    m_Value: 0.2
+  GlitchLength:
+    m_OverrideState: 0
+    m_Value: 15
+  EnableSignalInterference:
+    m_OverrideState: 0
+    m_Value: 1
+  InterferenceFrequency:
+    m_OverrideState: 0
+    m_Value: 70
+  InterferenceAmplitude:
+    m_OverrideState: 0
+    m_Value: 0.25
+  ChromaticOffset:
+    m_OverrideState: 0
+    m_Value: 0
+  ChromaticOffsetSpeed:
+    m_OverrideState: 0
+    m_Value: 0.1
+  SubPixelMode:
+    m_OverrideState: 0
+    m_Value: 0
+  SubPixelDensity:
+    m_OverrideState: 0
+    m_Value: 100
+  UnsharpAmount:
+    m_OverrideState: 0
+    m_Value: 1.5
+  UnsharpRadius:
+    m_OverrideState: 0
+    m_Value: 1
+  UnsharpThreshold:
+    m_OverrideState: 0
+    m_Value: 0.02
+  ClampBlack:
+    m_OverrideState: 0
+    m_Value: 0.05
+  ClampWhite:
+    m_OverrideState: 0
+    m_Value: 0.95
+  ShadowTint:
+    m_OverrideState: 0
+    m_Value: {r: 0.7, g: 0.6, b: 0.9, a: 1}
+  Gamma:
+    m_OverrideState: 0
+    m_Value: 0.374
+  Brightness:
+    m_OverrideState: 0
+    m_Value: 0.5
+  Contrast:
+    m_OverrideState: 0
+    m_Value: 0.5
+  Saturation:
+    m_OverrideState: 0
+    m_Value: 0.5
+  Hue:
+    m_OverrideState: 0
+    m_Value: 0
+  RedShift:
+    m_OverrideState: 0
+    m_Value: 0
+  BlueShift:
+    m_OverrideState: 0
+    m_Value: 0
+  GreenShift:
+    m_OverrideState: 0
+    m_Value: 0
+  IsMonochrome:
+    m_OverrideState: 0
+    m_Value: 0

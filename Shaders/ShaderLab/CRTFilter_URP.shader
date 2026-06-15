@@ -29,6 +29,8 @@ Shader "Hidden/CRTFilter_URP"
 
             TEXTURE2D(_PrevFrameTex);
 
+            int _InterlaceOffset;
+            float _ShouldRefresh;
             float _ForceRefresh;
             float _RefreshRate;
             float _DecayRate;
@@ -196,11 +198,6 @@ Shader "Hidden/CRTFilter_URP"
                 return (weight > 0.0) ? scanVal / weight : 1.0;
             }
 
-            inline int Refresh(float time) 
-            {
-                return (int)((time * _RefreshRate) % 2.0);
-            }
-
             /**
              * Determines whether the current pixel should be updated.
              *
@@ -209,19 +206,14 @@ Shader "Hidden/CRTFilter_URP"
              */
             inline bool ShouldRefresh(float2 uv) 
             {
-               int lastInterlaceOffset = Refresh(_Time.y - unity_DeltaTime.x);
-               int  interlaceOffset = Refresh(_Time.y);
-
                 // Identify if the current row is even or odd, adjusted by a frame-toggled offset
                 float lin = floor(uv.y * _ScreenResolution.y);
-                bool isInteralcedRow = ((int(lin) + interlaceOffset) & 1) == 0;
+                bool isInteralcedRow = ((int(lin) + _InterlaceOffset) & 1) == 0;
 
                 // Refresh if: 
                 // 1. Interlacing is OFF and it is the active row
                 // 2. CRT is in a refresh frame (_Refresh = 1)
-                bool shouldRefresh = interlaceOffset != lastInterlaceOffset;
-
-                return !(isInteralcedRow && _EnableInterlacedRendering) && shouldRefresh;
+                return !(isInteralcedRow && _EnableInterlacedRendering) * (_ShouldRefresh > 0.5);
             }
 
             /**
@@ -643,7 +635,7 @@ Shader "Hidden/CRTFilter_URP"
 
             float4 frag(Varyings IN) : SV_Target
             {
-                if (!ShouldRefresh(IN.texcoord) && _ForceRefresh < 0.50) 
+                if (!ShouldRefresh(IN.texcoord) && _ForceRefresh < 0.5) 
                 {
                     return float4(GetLastFrameColor(IN.texcoord), 1.0);
                 }

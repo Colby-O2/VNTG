@@ -21,6 +21,12 @@ namespace ColbyO.VNTG.CRT
         private Dictionary<int, RTHandle> _historyBuffers = new();
 #endif
 
+#if UNITY_6000_4_OR_NEWER
+        private Dictionary<EntityId, CameraRefreshState> _cameraLastTimes = new();
+#else
+        private Dictionary<int, CameraRefreshState> _cameraLastTimes = new();
+#endif
+
         private Material _material;
 
         public CRTRendererPass(Material material)
@@ -90,6 +96,46 @@ namespace ColbyO.VNTG.CRT
             mat.SetFloat("_GlitchLength", settings.GlitchLength.value);
         }
 
+#if UNITY_6000_4_OR_NEWER
+        private (bool shouldRefresh, int interlaceOffset) ShouldRefresh(EntityId camID, CRTSettings settings)
+#else
+        private (bool shouldRefresh, int interlaceOffset) ShouldRefresh(int camID, CRTSettings settings)
+#endif
+        {
+            if (!_cameraLastTimes.TryGetValue(camID, out CameraRefreshState state))
+            {
+                state = new CameraRefreshState { accumulatedTime = 0f, interlaceOffset = 0 };
+            }
+
+            if (settings.UseMaxFPS.value)
+            {
+                state.interlaceOffset = (state.interlaceOffset + 1) % 2;
+                state.accumulatedTime = 0f;
+
+                _cameraLastTimes[camID] = state;
+
+                return (true, state.interlaceOffset);
+            }
+
+            float refreshRate = settings.RefreshRate.value;
+            float targetInterval = refreshRate > 0f ? (1.0f / refreshRate) : 0.016f;
+
+            state.accumulatedTime += Time.deltaTime;
+
+            bool shouldRefresh = false;
+
+            if (state.accumulatedTime >= targetInterval)
+            {
+                shouldRefresh = true;
+                state.interlaceOffset = (state.interlaceOffset + 1) % 2;
+                state.accumulatedTime %= targetInterval;
+            }
+
+            _cameraLastTimes[camID] = state;
+
+            return (shouldRefresh, state.interlaceOffset);
+        }
+
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
             VolumeStack stack = VolumeManager.instance.stack;
@@ -112,6 +158,8 @@ namespace ColbyO.VNTG.CRT
 #else
             int camID = cameraData.camera.GetInstanceID();
 #endif
+            (bool shouldRefresh, int interlaceOffset) = ShouldRefresh(camID, settings);
+
             float forceRefresh = _historyBuffers.ContainsKey(camID) ? 0.0f : 1.0f;
             RTHandle historyRT = GetHistoryBuffer(camID, cameraData, cameraData.cameraTargetDescriptor);
             TextureHandle historyHandle = renderGraph.ImportTexture(historyRT);
@@ -128,6 +176,8 @@ namespace ColbyO.VNTG.CRT
                 passData.material = _material;
                 passData.settings = settings;
                 passData.forceRefresh = forceRefresh;
+                passData.shouldRefresh = shouldRefresh ? 1.0f : 0.0f;
+                passData.interlaceOffset = interlaceOffset;
 
                 builder.UseTexture(passData.src, AccessFlags.Read);
                 builder.UseTexture(passData.history, AccessFlags.Read);
@@ -138,6 +188,9 @@ namespace ColbyO.VNTG.CRT
 
                     data.material.SetTexture("_PrevFrameTex", data.history);
                     data.material.SetFloat("_ForceRefresh", data.forceRefresh);
+                    data.material.SetFloat("_ShouldRefresh", data.shouldRefresh);
+                    data.material.SetInt("_InterlaceOffset", data.interlaceOffset);
+
                     UpdateMaterialWithSettings(data.material, data.settings);
 
                     Blitter.BlitTexture(context.cmd, data.src, new Vector4(1, 1, 0, 0), data.material, 0);
@@ -189,6 +242,11 @@ namespace ColbyO.VNTG.CRT
                 _historyBuffers[camID]?.Release();
                 _historyBuffers.Remove(camID);
             }
+
+            if (_cameraLastTimes.ContainsKey(camID))
+            {
+                _cameraLastTimes.Remove(camID);
+            }
         }
 
         public void Cleanup()
@@ -200,6 +258,12 @@ namespace ColbyO.VNTG.CRT
             _historyBuffers.Clear();
         }
 
+        private struct CameraRefreshState
+        {
+            public float accumulatedTime;
+            public int interlaceOffset;
+        }
+
         private class PassData
         {
             public TextureHandle src;
@@ -207,6 +271,8 @@ namespace ColbyO.VNTG.CRT
             public Material material;
             public CRTSettings settings;
             public float forceRefresh;
+            public float shouldRefresh;
+            public int interlaceOffset;
         }
     }
 }

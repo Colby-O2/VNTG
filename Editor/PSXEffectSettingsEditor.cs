@@ -12,12 +12,22 @@ namespace ColbyO.VNTG.Editor
     [CustomEditor(typeof(PSXEffectSettings))]
     public class PSXEffectSettingsEditor : VolumeComponentEditor
     {
+        // Settings
         private SerializedDataParameter _Enabled;
         private SerializedDataParameter _ShowInSceneView;
 
+        // Lighting
+        private SerializedDataParameter _AmbientColor;
+
+        // Pixelation
+        private SerializedDataParameter _EnablePixelation;
         private SerializedDataParameter _PixelResolution;
+
+        // Color Precision
+        private SerializedDataParameter _EnableColorPrecision;
         private SerializedDataParameter _ColorPrecision;
 
+        // Dither
         private SerializedDataParameter _EnableDither;
         private SerializedDataParameter _DitherMode;
         private SerializedDataParameter _DitherPattern;
@@ -25,7 +35,16 @@ namespace ColbyO.VNTG.Editor
         private SerializedDataParameter _DitherScale;
         private SerializedDataParameter _DitherThreshold;
 
+        // Color Palette 
+        private SerializedDataParameter _EnableColorPalette;
+        private SerializedDataParameter _PaletteInputMode;
+        private SerializedDataParameter _PaletteTexture;
+        private SerializedDataParameter _PaletteColorList;
+        private SerializedDataParameter _HexFileAsset;
+
+        // Fog
         private SerializedDataParameter _EnableFog;
+        private SerializedDataParameter _IgnoreSkybox;
         private SerializedDataParameter _FogColor;
         private SerializedDataParameter _FogDensity;
         private SerializedDataParameter _FogNoiseStrength;
@@ -40,7 +59,12 @@ namespace ColbyO.VNTG.Editor
             _Enabled = Unpack(o.Find(x => x.Enabled));
             _ShowInSceneView = Unpack(o.Find(x => x.ShowInSceneView));
 
+            _AmbientColor = Unpack(o.Find(x => x.AmbientColor));
+
+            _EnablePixelation = Unpack(o.Find(x => x.EnablePixelation));
             _PixelResolution = Unpack(o.Find(x => x.PixelResolution));
+
+            _EnableColorPrecision = Unpack(o.Find(x => x.EnableColorPrecision));
             _ColorPrecision = Unpack(o.Find(x => x.ColorPrecision));
 
             _EnableDither = Unpack(o.Find(x => x.EnableDither));
@@ -50,7 +74,14 @@ namespace ColbyO.VNTG.Editor
             _DitherScale = Unpack(o.Find(x => x.DitherScale));
             _DitherThreshold = Unpack(o.Find(x => x.DitherThreshold));
 
+            _EnableColorPalette = Unpack(o.Find(x => x.EnableColorPalette));
+            _PaletteInputMode = Unpack(o.Find(x => x.PaletteInputMode));
+            _PaletteTexture = Unpack(o.Find(x => x.PaletteTexture));
+            _PaletteColorList = Unpack(o.Find(x => x.PaletteColorList));
+            _HexFileAsset = Unpack(o.Find(x => x.HexFileAsset));
+
             _EnableFog = Unpack(o.Find(x => x.EnableFog));
+            _IgnoreSkybox = Unpack(o.Find(x => x.IgnoreSkybox));
             _FogColor = Unpack(o.Find(x => x.FogColor));
             _FogDensity = Unpack(o.Find(x => x.FogDensity));
             _FogNoiseStrength = Unpack(o.Find(x => x.FogNoiseStrength));
@@ -65,10 +96,33 @@ namespace ColbyO.VNTG.Editor
             PropertyField(_ShowInSceneView);
 
             EditorGUILayout.Space();
-            PropertyField(_PixelResolution);
-            PropertyField(_ColorPrecision);
+            EditorGUILayout.LabelField("Lighting", EditorStyles.boldLabel);
+            PropertyField(_AmbientColor);
 
             EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Pixelation", EditorStyles.boldLabel);
+            PropertyField(_EnablePixelation);
+
+            if (_EnablePixelation.value.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                PropertyField(_PixelResolution);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Color Precision", EditorStyles.boldLabel);
+            PropertyField(_EnableColorPrecision);
+
+            if (_EnableColorPrecision.value.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                PropertyField(_ColorPrecision);
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Dither", EditorStyles.boldLabel);
             PropertyField(_EnableDither);
 
             if (_EnableDither.value.boolValue)
@@ -88,11 +142,36 @@ namespace ColbyO.VNTG.Editor
             }
 
             EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Color Palette ", EditorStyles.boldLabel);
+            PropertyField(_EnableColorPalette);
+
+            if (_EnableColorPalette.value.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                PropertyField(_PaletteInputMode);
+                if ((PSXPaletteInputMode)_PaletteInputMode.value.enumValueIndex == PSXPaletteInputMode.Texture)
+                {
+                    PropertyField(_PaletteTexture);
+                }
+                else if ((PSXPaletteInputMode) _PaletteInputMode.value.enumValueIndex == PSXPaletteInputMode.HexFile)
+                {
+                    PropertyField(_HexFileAsset);
+                }
+                else
+                {
+                    PropertyField(_PaletteColorList);
+                }
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Fog", EditorStyles.boldLabel);
             PropertyField(_EnableFog);
 
             if (_EnableFog.value.boolValue)
             {
                 EditorGUI.indentLevel++;
+                PropertyField(_IgnoreSkybox);
                 PropertyField(_FogColor);
                 PropertyField(_FogDensity);
                 PropertyField(_FogNoiseStrength);

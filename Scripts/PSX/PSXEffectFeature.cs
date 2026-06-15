@@ -17,6 +17,7 @@ namespace ColbyO.VNTG.PSX
 
         private Material _material;
         private PSXEffectPass _psxEffectPass;
+        private PSXSetGlobalParamters _psxSetGlobalParamtersPass;
 
         public override void Create()
         {
@@ -26,6 +27,11 @@ namespace ColbyO.VNTG.PSX
             if (_material == null)
                 _material = CoreUtils.CreateEngineMaterial(_psxEffectShader);
 
+            _psxSetGlobalParamtersPass ??= new PSXSetGlobalParamters()
+            {
+                renderPassEvent = RenderPassEvent.BeforeRendering
+            };
+            
             _psxEffectPass ??= new PSXEffectPass(_material)
             {
                 renderPassEvent = _renderEvent
@@ -52,9 +58,33 @@ namespace ColbyO.VNTG.PSX
                 (isGameCamera || isSceneView)
             )
             {
+                _psxSetGlobalParamtersPass.Setup(settings.AmbientColor.value);
+
                 _psxEffectPass.Setup(_material);
+                renderer.EnqueuePass(_psxSetGlobalParamtersPass);
                 renderer.EnqueuePass(_psxEffectPass);
             }
+            else
+            {
+                _psxSetGlobalParamtersPass.Setup(Color.black);
+                renderer.EnqueuePass(_psxSetGlobalParamtersPass);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_psxEffectPass != null)
+            {
+                _psxEffectPass.ClearCache();
+            }
+
+            if (_material != null)
+            {
+                CoreUtils.Destroy(_material);
+                _material = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
