@@ -223,32 +223,22 @@ MonoBehaviour:
     m_Value: 1
   DitherScale:
     m_OverrideState: 1
-    m_Value: 0.179
+    m_Value: 0.193
   DitherThreshold:
     m_OverrideState: 1
     m_Value: 0
   EnableColorPalette:
     m_OverrideState: 1
     m_Value: 0
-  PaletteInputMode:
+  PreserveLighting:
     m_OverrideState: 1
-    m_Value: 2
-  PaletteTexture:
+    m_Value: 1
+  NormalizeLuminanceBeforeSampling:
     m_OverrideState: 1
-    m_Value: {fileID: 2800000, guid: bce6e94b717a52d4f8a3b7d110f9c8ca, type: 3}
-    dimension: 1
-  PaletteColorList:
+    m_Value: 0
+  PaletteAsset:
     m_OverrideState: 1
-    m_Value:
-    - {r: 1, g: 1, b: 1, a: 0}
-    - {r: 0.5, g: 0.5, b: 0.5, a: 0}
-    - {r: 0.254717, g: 0.24630652, b: 0.24630652, a: 0}
-    - {r: 0, g: 0, b: 0, a: 0}
-    - {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
-    - {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
-  HexFileAsset:
-    m_OverrideState: 1
-    m_Value: {fileID: 1042094116111776886, guid: eeef6400e3d6dc54bb88c6de5bd8406c, type: 3}
+    m_Value: {fileID: 5022602860645237092, guid: 8d011e57e6d4f8147820ff2fb97d554c, type: 3}
   EnableFog:
     m_OverrideState: 1
     m_Value: 1

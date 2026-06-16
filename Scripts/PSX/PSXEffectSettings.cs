@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
+using ColbyO.VNTG.ColorPalette;
+
 //-----------------------------------------------------------------------
 // Author:  Colby-O
 // File:    PSXEffectSettings.cs
@@ -35,11 +37,10 @@ namespace ColbyO.VNTG.PSX
 
         // Color Palette 
         public BoolParameter EnableColorPalette  = new BoolParameter(false);
-        public EnumParameter<PSXPaletteInputMode> PaletteInputMode = new EnumParameter<PSXPaletteInputMode>(PSXPaletteInputMode.ColorList);
-        public TextureParameter PaletteTexture = new TextureParameter(null);
-        public ListColorParameter PaletteColorList = new ListColorParameter(new System.Collections.Generic.List<Color>());
-        public TextAssetParameter HexFileAsset = new TextAssetParameter(null);
-
+        public BoolParameter PreserveLighting = new BoolParameter(false);
+        public BoolParameter NormalizeLuminanceBeforeSampling = new BoolParameter(false);
+        public PaletteAssetParameter PaletteAsset = new PaletteAssetParameter(null);
+        
         // Fog
         public BoolParameter EnableFog = new BoolParameter(false);
         public BoolParameter IgnoreSkybox = new BoolParameter(false);

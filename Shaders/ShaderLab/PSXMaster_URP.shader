@@ -21,6 +21,8 @@ Shader "Hidden/PSXMaster_URP"
         
         [Header(Palette)]
         _EnablePalette ("Enable Color Palette", Float) = 0
+        [Toggle] _PaletteNormalizeLuminance ("Palette Normalize Luminance", Float) = 0
+        [Toggle] _PreserveLighting ("Preserve Lighting Intensity", Float) = 0
         _PaletteLUT ("3D Color Palette Map", 3D) = "white" {}
 
         [Header(Fog)]
@@ -63,6 +65,8 @@ Shader "Hidden/PSXMaster_URP"
             float _DitherThreshold;
             
             float _EnablePalette;
+            float _PaletteNormalizeLuminance;
+            float _PreserveLighting;
             TEXTURE3D(_PaletteLUT);
             SAMPLER(sampler_PaletteLUT);
 
@@ -365,8 +369,28 @@ Shader "Hidden/PSXMaster_URP"
              */
             inline float3 ApplyPaletteLookup(float3 color)
             {
-                float3 uvw = color * (31.0 / 32.0) + (0.5 / 32.0);
-                return SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
+                float originalLength = length(color);
+
+                if (_PaletteNormalizeLuminance > 0.5)
+                {
+                    if (originalLength < 0.0001)
+                    {
+                        return float3(0.0, 0.0, 0.0);
+                    }
+                    
+                    float3 normalizedColor = color / originalLength;
+                    float3 uvw = normalizedColor * (31.0 / 32.0) + (0.5 / 32.0);
+                    float3 matchedColor = SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
+                    
+                    return (_PreserveLighting > 0.5) ? (normalize(matchedColor) * originalLength) : matchedColor;
+                }
+                else
+                {
+                    float3 uvw = color * (31.0 / 32.0) + (0.5 / 32.0);
+                    float3 matchedColor = SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
+
+                    return (_PreserveLighting > 0.5) ? (normalize(matchedColor) * originalLength) : matchedColor;
+                }
             }
 
             float4 Frag(Varyings IN) : SV_Target

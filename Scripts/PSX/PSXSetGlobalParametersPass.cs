@@ -30,12 +30,5 @@ namespace ColbyO.VNTG.PSX
         {
             Shader.SetGlobalColor(AmbientColorID, _ambientColor);
         }
-
-        private class PassData
-        {
-            public TextureHandle src;
-            public Material material;
-            public PSXEffectSettings settings;
-        }
     }
 }

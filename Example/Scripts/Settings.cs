@@ -6,7 +6,7 @@ using UnityEngine;
 //-----------------------------------------------------------------------
 namespace ColbyO.VNTG.Example
 {
-    [CreateAssetMenu(fileName = "DefaultFirstPersonSettings", menuName = "Interaction System/Example/FirstPersonSettings")]
+    [CreateAssetMenu(fileName = "DefaultFirstPersonSettings", menuName = "VNTG/Example/FirstPersonSettings")]
     internal class Settings : ScriptableObject
     {
         [Header("Look")]

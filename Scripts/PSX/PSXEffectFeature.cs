@@ -73,11 +73,6 @@ namespace ColbyO.VNTG.PSX
 
         protected override void Dispose(bool disposing)
         {
-            if (_psxEffectPass != null)
-            {
-                _psxEffectPass.ClearCache();
-            }
-
             if (_material != null)
             {
                 CoreUtils.Destroy(_material);
