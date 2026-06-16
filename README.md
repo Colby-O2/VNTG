@@ -64,8 +64,8 @@ Options for pixel perfect dither or a custom scale
 Import color palettes from a variety of file formats, including .ase (Photoshop ASE), .gpl (GIMP Palette), .hex, .txt (Paint.NET), and .pal (JASC/RPAL).<br>
 You can also create a palette from a texture or manually define a custom palette directly within the editor.<br>
 Includes multiple options for changing color distance metrics when matching colors,  preserving lighting and more!<br>
-The palette used in the image below can be found <br>
-![HERE](https://lospec.com/palette-list/western-desert).
+The palette used in the image below can be found [HERE](https://lospec.com/palette-list/western-desert).
+![Color Palette Example](https://github.com/Colby-O2/VNTG/blob/master/Videos/PaletteExample.png)
 
 **Customizable Stylized Fog**  
 ![Stylized Fog](https://github.com/Colby-O2/VNTG/blob/master/Videos/Fog.gif)
