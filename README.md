@@ -22,7 +22,7 @@ Email: cokeefe919@gmail.com
 ## PSX PBR Material
 
 **Custom lighting with four lighting models (Unlit, Lit, Texel Lit, and Vertex Lit).**  
-**Compatible with Forward, Forward+, Deferred, and Deferred+ rendering.**
+**Compatible with Forward, Forward+, Deferred, and Deferred+ rendering.** <br>
 **A global ambient lighting color control is included  as well!**
 
 ![PSX PBR Material Example](https://github.com/Colby-O2/VNTG/blob/master/Videos/Light.gif)
