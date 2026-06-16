@@ -25,6 +25,8 @@ Only the listed files are included from the original projects; other files in th
   - Fixed shadows for additional lights and added custom shadow tinting and distance cutoffs
   
   - Added light cookie support
+    
+  - Added ambient lighting
   
   - Refactored overall code structure
 
