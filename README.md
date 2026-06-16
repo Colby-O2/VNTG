@@ -23,6 +23,7 @@ Email: cokeefe919@gmail.com
 
 **Custom lighting with four lighting models (Unlit, Lit, Texel Lit, and Vertex Lit).**  
 **Compatible with Forward, Forward+, Deferred, and Deferred+ rendering.**
+**A global ambient lighting color control is included  as well!**
 
 ![PSX PBR Material Example](https://github.com/Colby-O2/VNTG/blob/master/Videos/Light.gif)
 
@@ -58,6 +59,13 @@ Email: cokeefe919@gmail.com
 with Additive and Multiplicative dither modes. (only multiplicative is shown below)<br>
 Options for pixel perfect dither or a custom scale
 ![Dithering Example](https://github.com/Colby-O2/VNTG/blob/master/Videos/Dither.gif)
+
+**Apply Custom Color Palette**  
+Import color palettes from a variety of file formats, including .ase (Photoshop ASE), .gpl (GIMP Palette), .hex, .txt (Paint.NET), and .pal (JASC/RPAL).<br>
+You can also create a palette from a texture or manually define a custom palette directly within the editor.<br>
+Includes multiple options for changing color distance metrics when matching colors,  preserving lighting and more!<br>
+The palette used in the image below can be found <br>
+![HERE](https://lospec.com/palette-list/western-desert).
 
 **Customizable Stylized Fog**  
 ![Stylized Fog](https://github.com/Colby-O2/VNTG/blob/master/Videos/Fog.gif)
@@ -96,6 +104,7 @@ Options for pixel perfect dither or a custom scale
 
 Some projects where I've used VNTG or older versions of these shaders:
 
+- [The Deadman's Stretch](https://colby-o.itch.io/the-deadmans-stretch)
 - [Wrong Floor](https://colby-o.itch.io/wrong-floor)
 - [The Motel](https://colby-o.itch.io/the-motel)  
 - [Code Black](https://colby-o.itch.io/code-black)
