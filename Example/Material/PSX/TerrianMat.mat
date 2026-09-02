@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _LIGHTINGMETHOD_TEXEL_LIT
+  - _SHADINGMETHOD_DEFAULT
   - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
   - _TEXTURESAMPLEMODE_POINT
   - _VERTEXJITTERMODE_VIEW_SPACE
@@ -112,6 +113,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PaletteLUT:
+        m_Texture: {fileID: 7487610162398645216, guid: 6b63101ee40ecb248918b0ead020a537, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -172,14 +177,17 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorDepth: 24
+    - _ColorDepth: 5
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DitherScale: 0.35
+    - _DitherStrength: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnableAffineTextureMapping: 1
+    - _EnableAffineTextureMapping: 0
+    - _EnableDithering: 1
     - _EnableHeightBlend: 0
     - _EnableInstancedPerPixelNormal: 1
     - _EnableShadows: 1
@@ -198,15 +206,17 @@ Material:
     - _Metallic1: 0
     - _Metallic2: 0
     - _Metallic3: 0
+    - _Metalness: 0
     - _NumLayersCount: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SHADINGMETHOD: 0
     - _SaturationMultiplier: 1
     - _ShadowDistCutoff: 100
     - _ShadowOffset: 0
-    - _Smoothness: 0.141
+    - _Smoothness: 0.173
     - _Smoothness0: 1
     - _Smoothness1: 1
     - _Smoothness2: 1
@@ -217,13 +227,15 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TEXTURESAMPLEMODE: 0
-    - _TextureResolution: 16
+    - _TextureResolution: 256
     - _TextureResolutionFactor: 512
+    - _TextureResolutionScale: 512
     - _UseColorQuantization: 1
+    - _UsePalette: 0
     - _UseSpecular: 0
     - _UseVertexColor: 0
     - _VERTEXJITTERMODE: 1
-    - _VertexPrecision: 32
+    - _VertexPrecision: 8
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
@@ -233,7 +245,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecularColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecularColor: {r: 1, g: 0, b: 0, a: 0}
     - _TintColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

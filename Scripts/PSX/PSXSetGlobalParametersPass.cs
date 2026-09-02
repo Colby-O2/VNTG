@@ -19,6 +19,7 @@ namespace ColbyO.VNTG.PSX
 
         public PSXSetGlobalParamters()
         {
+            requiresIntermediateTexture = true;
         }
 
         public void Setup(Color color)

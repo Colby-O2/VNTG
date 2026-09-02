@@ -52,11 +52,9 @@ namespace ColbyO.VNTG.PSX
             bool isGameCamera = renderingData.cameraData.cameraType == CameraType.Game;
             bool isSceneView = renderingData.cameraData.cameraType == CameraType.SceneView && settings.ShowInSceneView.value;
 
-            if (
-                settings != null &&
-                settings.IsActive() &&
-                (isGameCamera || isSceneView)
-            )
+            bool isActive = settings != null && settings.IsActive() && (isGameCamera || isSceneView);
+
+            if (isActive)
             {
                 _psxSetGlobalParamtersPass.Setup(settings.AmbientColor.value);
 

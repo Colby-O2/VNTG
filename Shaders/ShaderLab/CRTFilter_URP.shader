@@ -299,7 +299,7 @@ Shader "Hidden/CRTFilter_URP"
                 float3 scene = originalSceneColor;
 
                 // Determine if a glitch line should trigger for this frame
-                if(WhiteNoise(float2(600.0, 500.0), 0.0, frac(_Time.y * 20.0)) > 1.0 - _GlitchChance)
+                if(_GlitchChance > 0.001 && WhiteNoise(float2(600.0, 500.0), 0.0, frac(_Time.y * 20.0)) > 1.0 - _GlitchChance)
                 {
                     // Pick a random y coordinate for the line to appear
                     float randomY = WhiteNoise(float2(800.0, 50.0), 0.0, frac(_Time.y));
@@ -331,7 +331,7 @@ Shader "Hidden/CRTFilter_URP"
                     }
                 }
 
-                return scene;
+                return saturate(scene);
             }
 
             /**

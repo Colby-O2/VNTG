@@ -7,15 +7,21 @@ Shader "Hidden/PSXMaster_URP"
 {
     Properties
     {
+        [Header(Internal)]
+        _VNTGScreenParams ("Screen Width/Height", Vector) = (1920, 1080, 0, 0)
+
         [Header(Resolution)]
-        _EnablePixelation("Enable Pixelation", Float) = 1
+        _EnablePixelation ("Enable Pixelation", Float) = 1
+        _EnableLetterbox ("Letterbox To Perserve Aspect Ratio", Float) = 1.0
         _PixelResolution ("Pixelation Resolution", Vector) = (256, 256, 0, 0)
         
         [Header(Color and Dither)]
-        _EnableColorPrecision("Enable Color Precision", Float) = 1
+        _EnableColorPrecision ("Enable Color Precision", Float) = 1
         _ColorPrecision ("Color Steps", Float) = 32
         _DitherPattern ("Dither Pattern", Float) = 1.0
         _DitherPixelPerfect ("Use Pixel Perfect Dither", Float) = 1.0
+        _DitherRelativeScale("Use Relative Dither Scale", Float) = 1.0
+        _DitherReferenceResolution ("Dither Reference Resolution", Vector) = (1920, 1080, 0, 0)
         _DitherScale ("Dither Pattern Scale", Float) = 1.0
         _DitherThreshold ("Dither Sensitivity", Float) = 1.0
         
@@ -51,7 +57,10 @@ Shader "Hidden/PSXMaster_URP"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
+            float2 _VNTGScreenParams;
+
             float _EnablePixelation;
+            float _EnableLetterbox;
             float2 _PixelResolution;
 
             float _EnableColorPrecision;
@@ -61,6 +70,8 @@ Shader "Hidden/PSXMaster_URP"
             float _DitherMode;
             int _DitherPattern;
             float _DitherPixelPerfect;
+            float _DitherRelativeScale;
+            float2 _DitherReferenceResolution;
             float _DitherScale;
             float _DitherThreshold;
             
@@ -337,8 +348,17 @@ Shader "Hidden/PSXMaster_URP"
             {
                 float3 finalCol = scene;
 
-                float2 ditherRes = lerp(_ScreenParams.xy / max(1.0, _DitherScale), _PixelResolution, _DitherPixelPerfect);
-                uint2 ditherCoord = (uint2)(uv * ditherRes);
+                float screenAspect = _VNTGScreenParams.x / _VNTGScreenParams.y;
+                float targetAspect = _DitherReferenceResolution.x / _DitherReferenceResolution.y;
+
+                float aspectScale = (screenAspect < targetAspect) ? (_VNTGScreenParams.y / _DitherReferenceResolution.y) : (_VNTGScreenParams.x / _DitherReferenceResolution.x);
+   
+                float useRelative = step(0.5, _DitherRelativeScale);
+                float scale = useRelative * aspectScale + (1.0 - useRelative);
+
+                float2 pixelCoords = uv * lerp(_VNTGScreenParams, _PixelResolution, _EnablePixelation * _DitherPixelPerfect);
+
+                uint2 ditherCoord = (uint2)(pixelCoords / (scale * max(1.0, _DitherScale)));
 
                 float4x4 pattern = GetDitherPattern(_DitherPattern);
 
@@ -370,6 +390,7 @@ Shader "Hidden/PSXMaster_URP"
             inline float3 ApplyPaletteLookup(float3 color)
             {
                 float originalLength = length(color);
+                float originalLum = GetLuminance(color);
 
                 if (_PaletteNormalizeLuminance > 0.5)
                 {
@@ -377,32 +398,73 @@ Shader "Hidden/PSXMaster_URP"
                     {
                         return float3(0.0, 0.0, 0.0);
                     }
-                    
+        
                     float3 normalizedColor = color / originalLength;
                     float3 uvw = normalizedColor * (31.0 / 32.0) + (0.5 / 32.0);
                     float3 matchedColor = SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
-                    
-                    return (_PreserveLighting > 0.5) ? (normalize(matchedColor) * originalLength) : matchedColor;
+
+                    if (_PreserveLighting > 0.5)
+                    {
+                        float matchedLum = GetLuminance(matchedColor);
+
+                        if (matchedLum > 0.0001)
+                        {
+                            matchedColor *= (originalLum / matchedLum);
+                        }
+                    }
+
+                    return matchedColor;
                 }
                 else
                 {
                     float3 uvw = color * (31.0 / 32.0) + (0.5 / 32.0);
                     float3 matchedColor = SAMPLE_TEXTURE3D(_PaletteLUT, sampler_PaletteLUT, uvw).rgb;
 
-                    return (_PreserveLighting > 0.5) ? (normalize(matchedColor) * originalLength) : matchedColor;
+                    if (_PreserveLighting > 0.5)
+                    {
+                        float matchedLum = GetLuminance(matchedColor);
+
+                        if (matchedLum > 0.0001)
+                        {
+                            matchedColor *= (originalLum / matchedLum);
+                        }
+                    }
+
+                    return matchedColor;
                 }
             }
 
             float4 Frag(Varyings IN) : SV_Target
             {
                 float2 uv = IN.texcoord;
-                
+                float mask = 1.0;
+                if (_EnableLetterbox > 0.5 && _EnablePixelation > 0.5)
+                {
+                    float targetAspect = _PixelResolution.x / _PixelResolution.y;
+                    float screenAspect = _VNTGScreenParams.x / _VNTGScreenParams.y;
+
+                    float2 scale = 1.0;
+                    if (screenAspect > targetAspect)
+                    {
+                        scale.x = screenAspect / targetAspect;
+                    }
+                    else 
+                    {
+                        scale.y = targetAspect / screenAspect;
+                    }
+
+                    uv = (IN.texcoord - 0.5) * scale + 0.5;
+
+                    float2 border = step(0.0, uv) * step(uv, 1.0);
+                    mask = border.x * border.y;
+                }
+
                 float2 pixel = floor(uv * _PixelResolution);
                 float2 downsampledUV = (_EnablePixelation > 0.5) ? (pixel + 0.5) / _PixelResolution : uv;
 
                 float4 scene = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, downsampledUV);
 
-                float3 finalCol = ApplyDither(uv, scene.rgb);
+                float3 finalCol = ApplyDither((_DitherPixelPerfect > 0.5) ? uv : IN.texcoord, scene.rgb);
 
                 finalCol = Quantize(finalCol, _ColorPrecision);
 
@@ -413,7 +475,7 @@ Shader "Hidden/PSXMaster_URP"
 
                 finalCol = CalculateFog(downsampledUV, finalCol);
 
-                return float4(finalCol, scene.a);
+                return float4(finalCol * mask, scene.a);
             }
             ENDHLSL
         }

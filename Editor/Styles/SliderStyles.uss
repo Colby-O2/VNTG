@@ -1,0 +1,55 @@
+/* SliderStyles.uss */
+
+.blit-slider__knob {
+    position: absolute;
+    background-color: transparent;
+    border-left-color: white;
+    border-right-color: white;
+    border-top-color: white;
+    border-bottom-color: white;
+    border-left-width: 1.5px;
+    border-right-width: 1.5px;
+    border-top-width: 1.5px;
+    border-bottom-width: 1.5px;
+}
+
+.blit-slider__knob-core {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-left-color: rgba(31, 31, 31, 1);
+    border-right-color: rgba(31, 31, 31, 1);
+    border-top-color: rgba(31, 31, 31, 1);
+    border-bottom-color: rgba(31, 31, 31, 1);
+    border-left-width: 1.5px;
+    border-right-width: 1.5px;
+    border-top-width: 1.5px;
+    border-bottom-width: 1.5px;
+}
+
+.channel-slider__row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.channel-slider__label {
+    width: 100px;
+}
+
+.channel-slider__track {
+    flex-grow: 1;
+    margin-right: 8px;
+    background-color: transparent;
+}
+
+.channel-slider__field {
+    width: 60px;
+}
+
+
+.color-bar__container {
+
+}

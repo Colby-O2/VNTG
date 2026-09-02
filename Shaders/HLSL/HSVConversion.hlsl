@@ -3,8 +3,8 @@
 // File:    HSVConversion.hlsl
 //-----------------------------------------------------------------------
 
-#ifndef HSV_CONVERSION_INCLUDED
-#define HSV_CONVERSION_INCLUDED
+#ifndef COLBYO_VNTG_HSV_CONVERSION_INCLUDED
+#define COLBYO_VNTG_HSV_CONVERSION_INCLUDED
 
 void RgbToHsv_float(float3 RGB, out float3 HSV)
 {

@@ -8,8 +8,8 @@ using UnityEngine.Rendering;
 namespace ColbyO.VNTG.ColorPalette
 {
     [System.Serializable]
-    public class PaletteAssetParameter : VolumeParameter<PaletteAsset>
+    public class PaletteAssetParameter : VolumeParameter<Palette>
     {
-        public PaletteAssetParameter(PaletteAsset value, bool overrideState = false) : base(value, overrideState) { }
+        public PaletteAssetParameter(Palette value, bool overrideState = false) : base(value, overrideState) { }
     }
 }

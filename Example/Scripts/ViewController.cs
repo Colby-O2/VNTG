@@ -9,6 +9,7 @@ namespace ColbyO.VNTG.Example
     internal class ViewController : MonoBehaviour
     {
         [SerializeField] private Settings _settings;
+        [SerializeField] private MovementController _movementController;
         [SerializeField] private Transform _playerBody;
 
         private Vector3 _startPos;
@@ -24,6 +25,7 @@ namespace ColbyO.VNTG.Example
         {
             _startPos = transform.localPosition;
             if (!_playerBody) _playerBody = transform.parent;
+            if (!_movementController) _movementController = GetComponentInParent<MovementController>();
             _input = FindAnyObjectByType<InputManager>();
         }
 
@@ -72,7 +74,7 @@ namespace ColbyO.VNTG.Example
 
         private void UpdateRotation()
         {
-            if (MovementController.LockMovement) return;
+            if (_movementController.LockMovement) return;
 
             ProcessHead();
             ProcessBody();

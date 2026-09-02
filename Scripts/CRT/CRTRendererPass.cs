@@ -42,57 +42,61 @@ namespace ColbyO.VNTG.CRT
 
         private void UpdateMaterialWithSettings(Material mat, CRTSettings settings)
         {
-            mat.SetFloat("_RefreshRate", settings.RefreshRate.value);
-            mat.SetFloat("_DecayRate", settings.DecayRate.value);
-            mat.SetVector("_ScreenResolution", settings.ScreenResolution.value);
-            mat.SetInt("_EnableInterlacedRendering", settings.EnableInterlacedRendering.value ? 1 : 0);
+            mat.SetFloat("_RefreshRate", settings.EnableScreenSettings.value ? settings.RefreshRate.value : 50);
+            mat.SetFloat("_DecayRate", settings.EnableScreenSettings.value ? settings.DecayRate.value : 1f);
+            mat.SetVector("_ScreenResolution", settings.EnableScreenSettings.value ? settings.ScreenResolution.value : new Vector2(Screen.width, Screen.height));
+            mat.SetInt("_EnableInterlacedRendering", settings.EnableScreenSettings.value ? (settings.EnableInterlacedRendering.value ? 1 : 0) : 0);
 
             mat.SetInt("_EnableScreenBend", settings.EnableScreenBend.value ? 1 : 0);
             mat.SetFloat("_ScreenBend", settings.ScreenBend.value);
-            mat.SetFloat("_ScreenRoundness", settings.ScreenRoundness.value);
-            mat.SetFloat("_VignetteOpacity", settings.VignetteOpacity.value);
 
-            mat.SetVector("_ScanLineOpacity", new Vector2(settings.ScanLineVerticalOpacity.value, settings.ScanLineHorizontalOpacity.value));
-            mat.SetVector("_ScanLineSpeed", new Vector2(settings.ScanLineVerticalSpeed.value, settings.ScanLineHorizontalSpeed.value));
-            mat.SetFloat("_ScanLineStrength", settings.ScanLineStrength.value);
+            mat.SetFloat("_ScreenRoundness", settings.EnableVignette.value ? settings.ScreenRoundness.value : 0f);
+            mat.SetFloat("_VignetteOpacity", settings.EnableVignette.value ? settings.VignetteOpacity.value : 1f);
 
-            mat.SetFloat("_NoiseSpeed", settings.NoiseSpeed.value);
-            mat.SetFloat("_NoiseScale", settings.NoiseScale.value);
-            mat.SetVector("_NoiseRGBOffset", new Vector2(settings.NoiseRBGOffsetX.value, settings.NoiseRBGOffsetY.value));
-            mat.SetFloat("_NoiseFade", settings.NoiseFade.value);
+            mat.SetVector("_ScanLineOpacity", settings.EnableScanlines.value ? new Vector2(settings.ScanLineVerticalOpacity.value, settings.ScanLineHorizontalOpacity.value) : new Vector2(0f, 0f));
+            mat.SetVector("_ScanLineSpeed", settings.EnableScanlines.value ? new Vector2(settings.ScanLineVerticalSpeed.value, settings.ScanLineHorizontalSpeed.value) : new Vector2(0f, 0f));
+            mat.SetFloat("_ScanLineStrength", settings.EnableScanlines.value ? settings.ScanLineStrength.value : 0f);
 
-            mat.SetFloat("_VHSSmear", Mathf.Lerp(1, 0.05f, settings.VhsSmear.value));
-            mat.SetFloat("_UnsharpAmount", settings.UnsharpAmount.value);
-            mat.SetFloat("_UnsharpRadius", settings.UnsharpRadius.value);
-            mat.SetFloat("_UnsharpThreshold", settings.UnsharpThreshold.value);
-            mat.SetFloat("_ClampBlack", settings.ClampBlack.value);
-            mat.SetFloat("_ClampWhite", settings.ClampWhite.value);
-            mat.SetColor("_TintShadowsColor", settings.ShadowTint.value);
+            mat.SetFloat("_NoiseSpeed", settings.EnableNoise.value ? settings.NoiseSpeed.value : 0f);
+            mat.SetFloat("_NoiseScale", settings.EnableNoise.value ? settings.NoiseScale.value : 0f);
+            mat.SetVector("_NoiseRGBOffset", settings.EnableNoise.value ? new Vector2(settings.NoiseRBGOffsetX.value, settings.NoiseRBGOffsetY.value) : new Vector2(0f, 0f));
+            mat.SetFloat("_NoiseFade", settings.EnableNoise.value ? settings.NoiseFade.value : 0f);
+
+            mat.SetFloat("_VHSSmear", settings.EnableVhs.value ? Mathf.Lerp(1f, 0.05f, settings.VhsSmear.value) : 1f);
+
+            mat.SetFloat("_UnsharpAmount", settings.EnableUnsharp.value ? settings.UnsharpAmount.value : 0f);
+            mat.SetFloat("_UnsharpRadius", settings.EnableUnsharp.value ? settings.UnsharpRadius.value : 0f);
+            mat.SetFloat("_UnsharpThreshold", settings.EnableUnsharp.value ? settings.UnsharpThreshold.value : 0f);
+
+            mat.SetFloat("_ClampBlack", settings.EnableClampColor.value ? settings.ClampBlack.value : 0f);
+            mat.SetFloat("_ClampWhite", settings.EnableClampColor.value ? settings.ClampWhite.value : 1f);
+            mat.SetColor("_TintShadowsColor", settings.EnableClampColor.value ? settings.ShadowTint.value : Color.black);
 
             mat.SetInt("_EnableTrackerLine", settings.EnableTrackerLine.value ? 1 : 0);
             mat.SetFloat("_TrackingSpeed", settings.TrackingSpeed.value);
             mat.SetFloat("_TrackingJitter", settings.TrackingJitter.value);
+
             mat.SetInt("_EnableSignalInterference", settings.EnableSignalInterference.value ? 1 : 0);
             mat.SetFloat("_InterferenceFrequency", settings.InterferenceFrequency.value);
             mat.SetFloat("_InterferenceAmplitude", settings.InterferenceAmplitude.value);
 
-            mat.SetFloat("_ChromaticOffset", settings.ChromaticOffset.value);
-            mat.SetFloat("_ChromaticSpeed", settings.ChromaticOffsetSpeed.value);
+            mat.SetFloat("_ChromaticOffset", settings.EnableChromaticAberration.value ? settings.ChromaticOffset.value : 0f);
+            mat.SetFloat("_ChromaticSpeed", settings.EnableChromaticAberration.value ? settings.ChromaticOffsetSpeed.value : 0f);
 
-            mat.SetFloat("_Brightness", settings.Brightness.value);
-            mat.SetFloat("_Contrast", settings.Contrast.value);
-            mat.SetFloat("_Saturation", settings.Saturation.value);
-            mat.SetFloat("_Gamma", settings.Gamma.value);
-            mat.SetFloat("_Hue", settings.Hue.value);
-            mat.SetFloat("_RedShift", settings.RedShift.value);
-            mat.SetFloat("_GreenShift", settings.GreenShift.value);
-            mat.SetFloat("_BlueShift", settings.BlueShift.value);
-            mat.SetInt("_IsMonochrome", settings.IsMonochrome.value ? 1 : 0);
+            mat.SetFloat("_Brightness", settings.EnableColorAdjustment.value ? settings.Brightness.value : 0.5f);
+            mat.SetFloat("_Contrast", settings.EnableColorAdjustment.value ? settings.Contrast.value : 0.5f);
+            mat.SetFloat("_Saturation", settings.EnableColorAdjustment.value ? settings.Saturation.value : 0.5f);
+            mat.SetFloat("_Gamma", settings.EnableColorAdjustment.value ? settings.Gamma.value : 0.5f);
+            mat.SetFloat("_Hue", settings.EnableColorAdjustment.value ? settings.Hue.value : 0f);
+            mat.SetFloat("_RedShift", settings.EnableColorAdjustment.value ? settings.RedShift.value : 0f);
+            mat.SetFloat("_GreenShift", settings.EnableColorAdjustment.value ? settings.GreenShift.value : 0f);
+            mat.SetFloat("_BlueShift", settings.EnableColorAdjustment.value ? settings.BlueShift.value : 0f);
+            mat.SetInt("_IsMonochrome", settings.EnableColorAdjustment.value ? (settings.IsMonochrome.value ? 1 : 0) : 0);
 
-            mat.SetInt("_SubPixelMode", (int)settings.SubPixelMode.value);
+            mat.SetInt("_SubPixelMode", settings.EnableSubPixels.value ? (int)settings.SubPixelMode.value : 0);
             mat.SetFloat("_SubPixelDesnity", settings.SubPixelDensity.value);
 
-            mat.SetFloat("_GlitchChance", settings.GlitchChance.value);
+            mat.SetFloat("_GlitchChance", settings.EnableGlitch.value ? settings.GlitchChance.value : 0f);
             mat.SetFloat("_GlitchLength", settings.GlitchLength.value);
         }
 
@@ -107,7 +111,7 @@ namespace ColbyO.VNTG.CRT
                 state = new CameraRefreshState { accumulatedTime = 0f, interlaceOffset = 0 };
             }
 
-            if (settings.UseMaxFPS.value)
+            if (!settings.EnableScreenSettings.value || settings.UseMaxFPS.value)
             {
                 state.interlaceOffset = (state.interlaceOffset + 1) % 2;
                 state.accumulatedTime = 0f;

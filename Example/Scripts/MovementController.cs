@@ -1,3 +1,4 @@
+using ColbyO.VNTG.ColorPalette;
 using UnityEngine;
 
 //-----------------------------------------------------------------------
@@ -29,7 +30,7 @@ namespace ColbyO.VNTG.Example
         private CharacterController _controller;
         private InputManager _input;
 
-        public static bool LockMovement { get; set; }
+        public bool LockMovement { get; set; }
         private float Speed => _settings.Speed;
         private float Gravity => GRAVITY * _settings.GravityMul;
 
@@ -43,7 +44,7 @@ namespace ColbyO.VNTG.Example
 
         private void Update()
         {
-            if (MovementController.LockMovement) return;
+            if (LockMovement) return;
             
             _movement = Vector2.ClampMagnitude(_input.RawMovement, 1f);
             ApplyGravity();
@@ -108,7 +109,7 @@ namespace ColbyO.VNTG.Example
 
         public void Freeze()
         {
-            MovementController.LockMovement = true;
+            LockMovement = true;
             _input.DisableMovement();
             _velocity = Vector2.zero;
             _horizontalVelocity = Vector2.zero;
@@ -116,7 +117,7 @@ namespace ColbyO.VNTG.Example
 
         public void Unfreeze()
         {
-            MovementController.LockMovement = false;
+            LockMovement = false;
             _input.EnableMovement();
         }
     }

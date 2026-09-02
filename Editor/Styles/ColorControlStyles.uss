@@ -1,0 +1,39 @@
+/* ColorControlStyles.uss */
+
+.color-control__main-container {
+    margin-top: 12px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.color-control__mode-toolbar {
+    justify-content: flex-start; 
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.color-control__mode-tab-button {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: center;
+    border-radius: 0px;
+    background-color: var(--unity-colors-button-background);
+}
+
+.color-control__mode-tab-button--active {
+    background-color: #2e60da;
+    color: #ffffff;
+    border-bottom-width: 2px;
+    border-bottom-color: #528eff;
+}
+
+.color-control__mode-tab-button:focus {
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-width: 2px;
+    border-bottom-color: #528eff;
+}
+
+.color-control__hex-field {
+    width: 200px;
+}

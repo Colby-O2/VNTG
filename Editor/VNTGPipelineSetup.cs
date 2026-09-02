@@ -21,6 +21,9 @@ namespace ColbyO.VNTG.Editor
 
         private static void CheckPipeline()
         {
+            if (Application.isBatchMode)
+                return;
+
             bool alreadySetup = EditorUserSettings.GetConfigValue(Key) == "true";
 
             if (alreadySetup)

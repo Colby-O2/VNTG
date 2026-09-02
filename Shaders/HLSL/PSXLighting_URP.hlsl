@@ -66,21 +66,87 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //-------------------------------------------------------------------------
 
-#ifndef PSX_LIGHTING_INCLUDED
-#define PSX_LIGHTING_INCLUDED
+#ifndef COLBYO_VNTG_PSX_LIGHTING_INCLUDED
+#define COLBYO_VNTG_PSX_LIGHTING_INCLUDED
 
-#if SHADERPASS == SHADERPASS_UNLIT
+#if SHADERPASS == SHADERPASS_UNLIT || SHADERPASS == SHADERPASS_DBUFFER_PROJECTOR
 
 #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
 #pragma multi_compile _ _ADDITIONAL_LIGHTS
 
-#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+#pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
 #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
 
 #endif
 
+
 float4 _VNTGAmbientColor;
+
+void SnapInterpolatorToTexel_float(
+    float3 Interpolator,
+    float2 UV,
+    float4 TexelSize,
+    out float3 SnappedInterpolator
+)
+{
+    SnappedInterpolator = Interpolator;
+    if (TexelSize.z < 0.001 || TexelSize.w < 0.001) return;
+    
+#if defined(SHADER_STAGE_FRAGMENT) || !defined(SHADER_STAGE_VERTEX)
+    
+    float2 originalUV = UV;
+    float2 centerUV = floor(originalUV * (TexelSize.zw)) / TexelSize.zw + (TexelSize.xy / 2.0);
+    float2 dUV = (centerUV - originalUV);
+
+    float2 dUVdS = ddx(originalUV);
+    float2 dUVdT = ddy(originalUV);
+
+    float2x2 dSTdUV = float2x2(dUVdT[1], -dUVdT[0], -dUVdS[1], dUVdS[0]) * (1.0f / (dUVdS[0] * dUVdT[1] - dUVdT[0] * dUVdS[1]));
+
+    float2 dST = mul(dSTdUV, dUV);
+
+    float3 dValuedS = ddx(Interpolator);
+    float3 dValuedT = ddy(Interpolator);
+
+    float3 dValue = dValuedS * dST[0] + dValuedT * dST[1];
+
+    SnappedInterpolator = Interpolator + dValue;
+    
+#endif
+}
+
+void SnapInterpolatorToTexel_half(
+    half3 Interpolator,
+    half2 UV,
+    half4 TexelSize,
+    out half3 SnappedInterpolator
+)
+{
+    SnappedInterpolator = Interpolator;
+    if (TexelSize.z < 0.001 || TexelSize.w < 0.001) return;
+    
+#if defined(SHADER_STAGE_FRAGMENT) || !defined(SHADER_STAGE_VERTEX)
+    
+    half2 originalUV = UV;
+    half2 centerUV = floor(originalUV * (TexelSize.zw)) / TexelSize.zw + (TexelSize.xy / 2.0);
+    half2 dUV = (centerUV - originalUV);
+
+    half2 dUVdS = ddx(originalUV);
+    half2 dUVdT = ddy(originalUV);
+
+    half2x2 dSTdUV = half2x2(dUVdT[1], -dUVdT[0], -dUVdS[1], dUVdS[0]) * (1.0f / (dUVdS[0] * dUVdT[1] - dUVdT[0] * dUVdS[1]));
+
+    half2 dST = mul(dSTdUV, dUV);
+
+    half3 dValuedS = ddx(Interpolator);
+    half3 dValuedT = ddy(Interpolator);
+
+    half3 dValue = dValuedS * dST[0] + dValuedT * dST[1];
+
+    SnappedInterpolator = Interpolator + dValue;
+    
+#endif
+}
 
 /** 
     Code is adapted from GreatestBear
@@ -97,11 +163,10 @@ void SnapPositionToTexel_float(
 
 )
 {
-    if (TexelSize.z < 0.001 || TexelSize.w < 0.001)
-    {
-        SnappedWorldPosition = WorldPosition;
-        return;
-    }
+    SnappedWorldPosition = WorldPosition;
+    if (TexelSize.z < 0.001 || TexelSize.w < 0.001) return;
+    
+#if defined(SHADER_STAGE_FRAGMENT) || !defined(SHADER_STAGE_VERTEX)
     
     float2 originalUV = UV;
     float2 centerUV = floor(originalUV * (TexelSize.zw)) / TexelSize.zw + (TexelSize.xy / 2.0);
@@ -121,6 +186,8 @@ void SnapPositionToTexel_float(
     dXYZ = clamp(dXYZ, -1, 1);
 
     SnappedWorldPosition = (WorldPosition + dXYZ);
+    
+#endif
 }
 
 /** 
@@ -138,11 +205,10 @@ void SnapPositionToTexel_half(
 
 )
 {
-    if (TexelSize.z < 0.001 || TexelSize.w < 0.001)
-    {
-        SnappedWorldPosition = WorldPosition;
-        return;
-    }
+    SnappedWorldPosition = WorldPosition;   
+    if (TexelSize.z < 0.001 || TexelSize.w < 0.001) return;   
+    
+#if defined(SHADER_STAGE_FRAGMENT) || !defined(SHADER_STAGE_VERTEX)
     
     half2 originalUV = UV;
     half2 centerUV = floor(originalUV * (TexelSize.zw)) / TexelSize.zw + (TexelSize.xy / 2.0);
@@ -162,6 +228,8 @@ void SnapPositionToTexel_half(
     dXYZ = clamp(dXYZ, -1, 1);
 
     SnappedWorldPosition = (WorldPosition + dXYZ);
+    
+#endif
 }
 
 void MainLight_float(
@@ -188,7 +256,7 @@ void MainLight_float(
     WorldView = SafeNormalize(WorldView);
     
 #if SHADOWS_SCREEN
-    half4 clipPos = TransformWorldToHClip(WorldPos);
+    half4 clipPos = TransformWorldToHClip(WorldPosition);
     half4 shadowCoord = ComputeScreenPos(clipPos);
 #else
     half4 shadowCoord = TransformWorldToShadowCoord(WorldPosition);
@@ -239,7 +307,7 @@ void MainLight_half(
     WorldView = SafeNormalize(WorldView);
     
 #if SHADOWS_SCREEN
-    half4 clipPos = TransformWorldToHClip(WorldPos);
+    half4 clipPos = TransformWorldToHClip(WorldPosition);
     half4 shadowCoord = ComputeScreenPos(clipPos);
 #else
     half4 shadowCoord = TransformWorldToShadowCoord(WorldPosition);

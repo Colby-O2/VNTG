@@ -18,6 +18,9 @@ MonoBehaviour:
     m_Value: 0
   ShowInSceneView:
     m_OverrideState: 1
+    m_Value: 0
+  EnableScreenSettings:
+    m_OverrideState: 1
     m_Value: 1
   ScreenResolution:
     m_OverrideState: 1
@@ -39,13 +42,19 @@ MonoBehaviour:
     m_Value: 1
   ScreenBend:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 3.8
+  EnableVignette:
+    m_OverrideState: 1
+    m_Value: 0
   ScreenRoundness:
     m_OverrideState: 1
-    m_Value: 0.539
+    m_Value: 0.751
   VignetteOpacity:
     m_OverrideState: 1
-    m_Value: 0.893
+    m_Value: 0.241
+  EnableScanlines:
+    m_OverrideState: 1
+    m_Value: 0
   ScanLineVerticalOpacity:
     m_OverrideState: 1
     m_Value: 0
@@ -54,97 +63,121 @@ MonoBehaviour:
     m_Value: 1
   ScanLineVerticalSpeed:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.1
   ScanLineHorizontalSpeed:
     m_OverrideState: 1
-    m_Value: -0.25
+    m_Value: 0.1
   ScanLineStrength:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.2
+  EnableNoise:
+    m_OverrideState: 1
+    m_Value: 0
   NoiseScale:
     m_OverrideState: 1
-    m_Value: 0.568
+    m_Value: 0.912
   NoiseRBGOffsetX:
     m_OverrideState: 1
-    m_Value: 0.4
+    m_Value: 0.824
   NoiseRBGOffsetY:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.752
   NoiseSpeed:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.736
   NoiseFade:
     m_OverrideState: 1
-    m_Value: 0.356
+    m_Value: 0.497
+  EnableVhs:
+    m_OverrideState: 1
+    m_Value: 0
   VhsSmear:
     m_OverrideState: 1
-    m_Value: 0.96
+    m_Value: 0.95
   EnableTrackerLine:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   TrackingSpeed:
     m_OverrideState: 1
-    m_Value: 4.8
+    m_Value: 4
   TrackingJitter:
     m_OverrideState: 1
-    m_Value: 12.1
+    m_Value: 4
+  EnableGlitch:
+    m_OverrideState: 1
+    m_Value: 1
   GlitchChance:
     m_OverrideState: 1
-    m_Value: 0.083
+    m_Value: 0.2
   GlitchLength:
     m_OverrideState: 1
     m_Value: 15
   EnableSignalInterference:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   InterferenceFrequency:
     m_OverrideState: 1
-    m_Value: 80.2
+    m_Value: 70
   InterferenceAmplitude:
     m_OverrideState: 1
-    m_Value: 0.296
+    m_Value: 0.25
+  EnableChromaticAberration:
+    m_OverrideState: 1
+    m_Value: 0
   ChromaticOffset:
     m_OverrideState: 1
     m_Value: 0
   ChromaticOffsetSpeed:
     m_OverrideState: 1
     m_Value: 0.1
+  EnableSubPixels:
+    m_OverrideState: 1
+    m_Value: 0
   SubPixelMode:
     m_OverrideState: 1
     m_Value: 0
   SubPixelDensity:
     m_OverrideState: 1
-    m_Value: 175.5
+    m_Value: 100
+  EnableUnsharp:
+    m_OverrideState: 1
+    m_Value: 0
   UnsharpAmount:
     m_OverrideState: 1
-    m_Value: 0.07
+    m_Value: 1.5
   UnsharpRadius:
     m_OverrideState: 1
     m_Value: 1
   UnsharpThreshold:
     m_OverrideState: 1
     m_Value: 0.02
-  ClampBlack:
+  EnableClampColor:
     m_OverrideState: 1
     m_Value: 0
+  ClampBlack:
+    m_OverrideState: 1
+    m_Value: 0.05
   ClampWhite:
     m_OverrideState: 1
     m_Value: 0.95
   ShadowTint:
     m_OverrideState: 1
     m_Value: {r: 0.7, g: 0.6, b: 0.9, a: 1}
+  EnableColorAdjustment:
+    m_OverrideState: 1
+    m_Value: 0
   Gamma:
     m_OverrideState: 1
-    m_Value: 0.599
+    m_Value: 0.438
   Brightness:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.51
   Contrast:
     m_OverrideState: 1
-    m_Value: 0.53
+    m_Value: 0.297
   Saturation:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 1
   Hue:
     m_OverrideState: 1
     m_Value: 0
@@ -193,22 +226,25 @@ MonoBehaviour:
     m_Value: 1
   ShowInSceneView:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   AmbientColor:
     m_OverrideState: 1
-    m_Value: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
+    m_Value: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
   EnablePixelation:
     m_OverrideState: 1
     m_Value: 1
+  EnableLetterbox:
+    m_OverrideState: 1
+    m_Value: 0
   PixelResolution:
     m_OverrideState: 1
-    m_Value: {x: 320, y: 256}
+    m_Value: {x: 640, y: 320}
   EnableColorPrecision:
     m_OverrideState: 1
     m_Value: 1
   ColorPrecision:
     m_OverrideState: 1
-    m_Value: 24
+    m_Value: 16
   EnableDither:
     m_OverrideState: 1
     m_Value: 1
@@ -217,13 +253,16 @@ MonoBehaviour:
     m_Value: 2
   DitherPattern:
     m_OverrideState: 1
-    m_Value: 1
-  DitherPixelPerfect:
+    m_Value: 2
+  DitherDisplayMode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
+  DitherReferenceRes:
+    m_OverrideState: 1
+    m_Value: {x: 1920, y: 1080}
   DitherScale:
     m_OverrideState: 1
-    m_Value: 0.193
+    m_Value: 0
   DitherThreshold:
     m_OverrideState: 1
     m_Value: 0
@@ -232,25 +271,25 @@ MonoBehaviour:
     m_Value: 0
   PreserveLighting:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   NormalizeLuminanceBeforeSampling:
     m_OverrideState: 1
     m_Value: 0
   PaletteAsset:
     m_OverrideState: 1
-    m_Value: {fileID: 5022602860645237092, guid: 8d011e57e6d4f8147820ff2fb97d554c, type: 3}
+    m_Value: {fileID: 11400000, guid: 9a6fbd59b10e6554f8ab1622d40d43ee, type: 2}
   EnableFog:
     m_OverrideState: 1
     m_Value: 1
   IgnoreSkybox:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   FogColor:
     m_OverrideState: 1
-    m_Value: {r: 0.1453809, g: 0.1981132, b: 0.124288, a: 1}
+    m_Value: {r: 0.14667143, g: 0.3018868, b: 0.27445868, a: 1}
   FogDensity:
     m_OverrideState: 1
-    m_Value: 0.09
+    m_Value: 0.046
   FogNoiseStrength:
     m_OverrideState: 1
     m_Value: 0.435
