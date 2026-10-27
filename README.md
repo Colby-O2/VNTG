@@ -104,6 +104,7 @@ The palette used in the image below can be found [HERE](https://lospec.com/palet
 
 Some projects where I've used VNTG or older versions of these shaders:
 
+- [Is Someone Coming?](https://colby-o.itch.io/is-someone-coming)
 - [The Deadman's Stretch](https://colby-o.itch.io/the-deadmans-stretch)
 - [Wrong Floor](https://colby-o.itch.io/wrong-floor)
 - [The Motel](https://colby-o.itch.io/the-motel)  
