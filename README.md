@@ -110,6 +110,7 @@ Some projects where I've used VNTG or older versions of these shaders:
 - [The Motel](https://colby-o.itch.io/the-motel)  
 - [Code Black](https://colby-o.itch.io/code-black)
 
+A list of projects from the community that publicly use VNTG can be found [HERE](https://itch.io/c/8376577/games-that-publicly-use-vntg-that-are-not-mine).
 ---
 
 ## Credits
